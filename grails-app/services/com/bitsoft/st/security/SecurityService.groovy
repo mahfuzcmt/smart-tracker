@@ -139,18 +139,24 @@ class SecurityService {
         return null
     }
 
+    /**
+        {
+            key : "super",
+            userName: "amdin",
+            contactNo: "0197xxxx",
+            fullName: "Mahfuz"
+       }
+     * Save initial role and admin user
+     *
+     * @return The stauts
+     */
     Boolean initUser(Map params){
-        Role collectorRole = new Role()
         Role adminRole = new Role()
         if(!Role.list()){
             adminRole.menuJson = "{\"children\":[{\"id\":\"webMenu\",\"url\":\"webMenu\",\"text\":\"Web Menu\",\"class\":\"fa fa-dashboard\",\"enable\":true,\"children\":[{\"id\":\"dashboard\",\"url\":\"dashboard\",\"text\":\"Dashboard\",\"class\":\"fa fa-dashboard\",\"enable\":true,\"children\":[]},{\"id\":\"userlist\",\"url\":\"userlist\",\"text\":\"Users\",\"class\":\"fa fa-user-plus\",\"enable\":true,\"children\":[]},{\"id\":\"report\",\"url\":\"report\",\"text\":\"Report\",\"class\":\"fa fa-file\",\"enable\":true,\"children\":[{\"id\":\"activityReport\",\"url\":\"activityReport\",\"text\":\"Activity Report\",\"class\":\"fa fa-history\",\"enable\":true,\"children\":[]},{\"id\":\"salesreport\",\"url\":\"salesreport\",\"text\":\"Sales Report\",\"class\":\"fa fa-bar-chart\",\"enable\":true,\"children\":[]},{\"id\":\"salessummary\",\"url\":\"salessummary\",\"text\":\"Sales Summary\",\"class\":\"fa fa-list-alt\",\"enable\":true,\"children\":[]},{\"id\":\"waybill\",\"url\":\"waybill\",\"text\":\"Way Bill\",\"class\":\"fa fa-forward\",\"enable\":true,\"children\":[]},{\"id\":\"ticketCount\",\"url\":\"ticketCount\",\"text\":\"Ticket Count\",\"class\":\"fa fa-calculator\",\"enable\":true,\"children\":[]},{\"id\":\"collectionReport\",\"url\":\"collectionReport\",\"text\":\"Collection Report\",\"class\":\"fa fa-university\",\"enable\":true,\"children\":[]}]},{\"id\":\"settings\",\"url\":\"settings\",\"text\":\"Settings\",\"class\":\"fas fa-cogs\",\"enable\":true,\"children\":[{\"id\":\"Counterlist\",\"url\":\"counterlist\",\"text\":\"Counter\",\"class\":\"fas fa-bus\",\"enable\":true,\"children\":[]},{\"id\":\"routelist\",\"url\":\"routelist\",\"text\":\"Route\",\"class\":\"fas fa-road\",\"enable\":true,\"children\":[]},{\"id\":\"carlist\",\"url\":\"carlist\",\"text\":\"Car\",\"class\":\"fas fa-car\",\"enable\":true,\"children\":[]},{\"id\":\"refund\",\"url\":\"refund\",\"text\":\"Refund\",\"class\":\"fa fa-undo\",\"enable\":true,\"children\":[]},{\"id\":\"manualSales\",\"url\":\"manualSales\",\"text\":\"Manual Sales\",\"class\":\"fa fa-signal\",\"enable\":true,\"children\":[]}]}]}]}"
             adminRole.name = "Admin"
             adminRole.beforeValidate()
             adminRole.save()
-            collectorRole.menuJson = "N/A"
-            collectorRole.name = "Collector"
-            collectorRole.beforeValidate()
-            collectorRole.save()
         }
         if(!User.list()){
             User user = new User()
