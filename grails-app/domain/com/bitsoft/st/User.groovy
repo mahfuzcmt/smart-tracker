@@ -8,6 +8,7 @@ class User implements MultiTenant<User> {
 
     Long id
     String fullName
+    String note
     String userName
     String password
     String contactNo
@@ -15,9 +16,7 @@ class User implements MultiTenant<User> {
     String shift
     String status = AppConstant.STATUS.ACTIVE
 
-    Boolean isWayBillFeatureEnabled = false
-
-    Long respectiveCounterId = 0
+    Integer syncLocInMin = 15
 
     Date created
     Date updated
@@ -27,8 +26,8 @@ class User implements MultiTenant<User> {
     static constraints = {
         contactNo(nullable: false, unique: true, blank: false)
         userName(nullable: false, unique: true, blank: false)
+        note(nullable: true)
         role(nullable: true, blank: true)
-        respectiveCounterId(nullable: true, blank: true)
         deviceMac(nullable: true, blank: true)
         shift(nullable: true, blank: true)
     }
