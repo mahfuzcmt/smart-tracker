@@ -77,6 +77,8 @@ dependencies {
     compile group: 'net.sf.supercsv', name: 'super-csv', version: '2.4.0'
     compile 'com.agileorbit:schwartz:1.0.1'
 
+    compile 'org.grails.plugins:swagger:1.0.1'
+
 
 }
 

@@ -1,6 +1,5 @@
 package com.bitsoft.st.security
 
-import com.bitsoft.st.Client
 import com.bitsoft.st.LocationLog
 import com.bitsoft.st.LocationService
 import grails.converters.JSON
