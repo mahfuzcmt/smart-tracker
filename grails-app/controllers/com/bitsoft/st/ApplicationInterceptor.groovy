@@ -25,7 +25,7 @@ class ApplicationInterceptor {
             session.setAttribute(AppConstant.SESSION_ATTRIBUTE.COMPANY_ADDRESS, client.address)
             session.setAttribute(AppConstant.SESSION_ATTRIBUTE.TICKET_CREDIT, client.creditText)
             session.setAttribute(AppConstant.SESSION_ATTRIBUTE.LIMIT, client.userLimit)
-            session.setAttribute(AppConstant.SESSION_ATTRIBUTE.TENANT_ID, client.tenantId.toLowerCase())
+            session.setAttribute(AppConstant.SESSION_ATTRIBUTE.TENANT_ID, client.tenantId)
 
             session.setAttribute(SessionTenantResolver.ATTRIBUTE, client.tenantId.toLowerCase())
             return true
