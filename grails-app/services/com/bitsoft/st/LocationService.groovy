@@ -30,8 +30,8 @@ class LocationService {
 
             locationLog.charge = params.charge
 
-            locationLog.lat = params.lat
-            locationLog.lng = params.lng
+            locationLog.lat = params.lat.toDouble()
+            locationLog.lng = params.lng.toDouble()
             locationLog.deviceInfo = params.deviceInfo
             locationLog.address = getAddressByLatAndLng(params.lat, params.lng)
             locationLog.save()
@@ -55,6 +55,7 @@ class LocationService {
                 eq("identifier", params.identifier)
             }
             between("created", DateTimeUtil.getDateFromStringForReport(params.startDate) ?: DateTimeUtil.startOfTheDay(), DateTimeUtil.getDateFromStringForReport(params.endDate) ?: DateTimeUtil.endOfTheDay())
+            order("created", "desc")
         }
     }
 

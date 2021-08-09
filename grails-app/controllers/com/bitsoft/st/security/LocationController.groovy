@@ -8,7 +8,7 @@ class LocationController {
 
     LocationService locationService
 
-    def saveLocationLog() {
+    def save() {
         Map params = request.JSON
         LocationLog locationLog = locationService.saveLocationLog(params)
         if (locationLog) {
@@ -18,11 +18,11 @@ class LocationController {
         }
     }
 
-    def getLocationLogs() {
+    def list() {
         Map params = request.JSON
-        LocationLog locationLog = locationService.getLocationLogsByUser(params)
-        if (locationLog) {
-            render([status: "success", locationLog: locationLog] as JSON)
+        List<LocationLog> locationLogList = locationService.getLocationLogsByUser(params)
+        if (locationLogList) {
+            render([status: "success", locationLogs: locationLogList] as JSON)
         } else {
             render([status: "warning", message: "Sorry!"] as JSON)
         }

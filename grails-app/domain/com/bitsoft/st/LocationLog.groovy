@@ -13,8 +13,7 @@ class LocationLog implements MultiTenant<LocationLog> {
     String identifier //without user for one time tracking
     String address
     String deviceInfo
-
-    Integer charge
+    String charge
 
     Double lat
     Double lng

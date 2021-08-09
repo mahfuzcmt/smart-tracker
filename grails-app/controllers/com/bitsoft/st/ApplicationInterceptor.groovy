@@ -27,7 +27,7 @@ class ApplicationInterceptor {
             session.setAttribute(AppConstant.SESSION_ATTRIBUTE.LIMIT, client.userLimit)
             session.setAttribute(AppConstant.SESSION_ATTRIBUTE.TENANT_ID, client.tenantId)
 
-            session.setAttribute(SessionTenantResolver.ATTRIBUTE, client.tenantId.toLowerCase())
+            session.setAttribute(SessionTenantResolver.ATTRIBUTE, client.tenantId)
             return true
         } else {
             return false
