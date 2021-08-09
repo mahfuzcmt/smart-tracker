@@ -1,6 +1,7 @@
 package com.bitsoft.st
 
 import com.bitsoft.st.utils.AppConstant
+import com.bitsoft.st.utils.AppUtil
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 
@@ -16,6 +17,10 @@ class UserService {
 
     def saveUser(Map params) {
         try {
+            if(AppUtil.session[AppConstant.SESSION_ATTRIBUTE.LIMIT] >= User.countByStatus(AppConstant.STATUS.ACTIVE)){
+                throw new Exception("User Limit is over. Contact with your administrator.")
+            }
+
             Role role = null
             if (params.role && !params.role.equals(AppConstant.ROLE.USER)) {
                 role = Role.findByName(params.role.toString())
@@ -69,9 +74,6 @@ class UserService {
             users = User.createCriteria().list(params) {
                 if (params?.colName && params?.colValue) {
                     eq(params.colName, params.colValue)
-                }
-                if(params.respectiveCounterId){
-                    eq("respectiveCounterId", params.respectiveCounterId.toLong())
                 }
                 if (!params.sort) {
                     order("id", "desc")

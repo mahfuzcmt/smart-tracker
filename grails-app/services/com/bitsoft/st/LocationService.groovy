@@ -42,7 +42,7 @@ class LocationService {
         }
         catch (Exception e) {
             log.error(e.message)
-            return false
+            return null
         }
     }
 
