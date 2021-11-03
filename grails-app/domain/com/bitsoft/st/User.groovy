@@ -8,12 +8,12 @@ class User implements MultiTenant<User> {
 
     Long id
     String fullName
+    String designation
     String note
     String userName
     String password
     String contactNo
     String deviceMac
-    String shift
     String status = AppConstant.STATUS.ACTIVE
 
     Integer syncLocInMin = 15
@@ -26,10 +26,10 @@ class User implements MultiTenant<User> {
     static constraints = {
         contactNo(nullable: false, unique: true, blank: false)
         userName(nullable: false, unique: true, blank: false)
+        deviceMac(nullable: true, unique: true, blank: true)
+        designation(nullable: true)
         note(nullable: true)
         role(nullable: true, blank: true)
-        deviceMac(nullable: true, blank: true)
-        shift(nullable: true, blank: true)
     }
 
     def beforeUpdate = {

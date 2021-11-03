@@ -16,7 +16,7 @@ grails:
 
 info:
   app:
-    name: 'smart-ticketing'
+    name: 'smart-tracking'
     version: '1.0.0'
     grailsVersion: '3.3.4'
 spring:

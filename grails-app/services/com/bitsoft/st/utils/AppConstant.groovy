@@ -108,41 +108,6 @@ class AppConstant {
         ]
     }
 
-    static getCLIENT_CATEGORY() {
-        return [
-                BUS   : "Bus",
-                LAUNCH: "Launch",
-        ]
-    }
-
-    static getTRANSACTION_TYPE() {
-        return [
-                ADD  : "add",
-                DEDUCT: "deduct",
-        ]
-    }
-    static getTRANSACTION_STATUS() {
-        return [
-                SUCCESS  : "success",
-                FAILED: "failed",
-                REVERSED: "reversed",
-        ]
-    }
-
-    static getREVERSED_TYPE() {
-        return [
-                AUTO  : "Auto",
-                MANUALLY: "Manually",
-        ]
-    }
-
-    static getTICKET_CHECKING_STATUS() {
-        return [
-                NOT_CHECKED  : "not checked",
-                CHECKED: "checked",
-        ]
-    }
-
     static String getBaseUrl(){
         if (grails.util.Environment.current.equals(grails.util.Environment.DEVELOPMENT)) {
             return getDevBaseUrl()
@@ -153,13 +118,6 @@ class AppConstant {
     }
 
     static String rootPathOfProd = "${File.separator}var${File.separator}lib${File.separator}tomcat8/webapps${File.separator}"
-
-    static getTRIP_TYPE() {
-        return [
-                UP  : "Up",
-                DOWN: "Down",
-        ]
-    }
 
 
     static getSHIFT() {
@@ -177,14 +135,6 @@ class AppConstant {
         ]
     }
 
-    static getFILE_PARSING_STATUS() {
-        return [
-                STARTED  : "started",
-                PROCESSING: "processing",
-                FAILED: "failed",
-                COMPLETED: "completed",
-        ]
-    }
 
     static getLOG_TYPE() {
         return [

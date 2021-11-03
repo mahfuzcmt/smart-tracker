@@ -20,7 +20,9 @@ class UserController {
                 render([tatus: "error", message: "username already exits!"] as JSON)
             } else if (userService.loadUsers([colName: "contactNo", colValue: params.contactNo])) {
                 render([tatus: "error", message: "Contact No already exits!"] as JSON)
-            } else {
+            } else if (userService.loadUsers([colName: "deviceMac", colValue: params.deviceMac])) {
+                render([tatus: "error", message: "Device Mac already exits!"] as JSON)
+            }  else {
                 if (userService.saveUser(params)) {
                     render([status: "success", message: "User successfully Saved"] as JSON)
                 } else {
@@ -94,8 +96,7 @@ class UserController {
         def id = params.id?.toLong()
         User user
         if(id){
-           def users = userService.loadUsers([colName: "id", colValue :id])
-            user = users.first()
+            user = userService.getUserById(id)
             def editableData = [:]
             editableData.id = user.id
             editableData.userName = user.userName
@@ -103,9 +104,8 @@ class UserController {
             editableData.password = user.password
             editableData.role = securityService.getRoleNameByUser(user) ?: AppConstant.ROLE.USER
 
-            editableData.shift = user.shift
+            editableData.syncLocInMin = user.syncLocInMin
             editableData.contactNo = user.contactNo
-            editableData.respectiveCounterId = user.respectiveCounterId
             editableData.status = user.status
             render([status: "success", data: editableData] as JSON)
         }else {
@@ -113,13 +113,27 @@ class UserController {
         }
     }
 
-    def adjustUserCredit(){
-        Map params = request.JSON
-        if (securityService.isRequestValid(params.adminId?.toLong(), params.token)) {
-            userService.adjustCredit(params)
-            render([status: "success", message: "Successfully credit updated!"] as JSON)
-        } else {
-            render([status: "warning", message: "Unauthorized access!"] as JSON)
+    def getUserByDeviceMac() {
+        User user
+        if(params.deviceMac){
+            user = userService.getUserByDeviceMac(params.deviceMac)
+            def editableData = [:]
+            editableData.id = user.id
+            editableData.userName = user.userName
+            editableData.fullName = user.fullName
+            editableData.password = user.password
+            editableData.role = securityService.getRoleNameByUser(user) ?: AppConstant.ROLE.USER
+
+            if(user.deviceMac){
+                editableData.deviceMac = user.deviceMac
+                //TODO get org info from default db
+            }
+            editableData.syncLocInMin = user.syncLocInMin
+            editableData.contactNo = user.contactNo
+            editableData.status = user.status
+            render([status: "success", data: editableData] as JSON)
+        }else {
+            render([status: "warning", data: user] as JSON)
         }
     }
 }

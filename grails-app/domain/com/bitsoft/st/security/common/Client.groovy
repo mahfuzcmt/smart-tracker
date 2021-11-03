@@ -1,4 +1,4 @@
-package com.bitsoft.st
+package com.bitsoft.st.security.common
 
 import com.bitsoft.st.utils.AppConstant
 
@@ -24,7 +24,7 @@ class Client {
 
     static constraints = {
         name(nullable: true)
-        tenantId (nullable: true)
+        tenantId (unique: true, nullable: true)
         contactNo(nullable: true)
         address(nullable: true)
         description(nullable: true)

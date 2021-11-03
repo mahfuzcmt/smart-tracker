@@ -1,9 +1,9 @@
 package com.bitsoft.st.security
 
-import com.bitsoft.st.Client
+import com.bitsoft.st.security.common.Client
+import com.bitsoft.st.security.common.UserMapping
 import com.bitsoft.st.utils.AppConstant
-
-import java.time.Instant
+import grails.gorm.transactions.Transactional
 
 class ClientService {
 
@@ -21,6 +21,7 @@ class ClientService {
         return null
     }
 
+    @Transactional
     Client createClient(params) {
         Client client = params.id ? getClientById(params.id.toLong()) : new Client()
 
@@ -35,6 +36,24 @@ class ClientService {
             return client
         }
         return null
+    }
+
+    Map getByDeviceMac(params) {
+        UserMapping userMapping = UserMapping.findByDeviceMac(params.deviceMac)
+        Map userData = [:]
+        if(userMapping){
+            userData.deviceMac = userMapping.deviceMac
+            userData.orgName = userMapping.client.name
+            userData.tenantId = userMapping.client.tenantId
+        }
+        return userData
+    }
+
+    UserMapping saveUserMapping(Map params) {
+        UserMapping userMapping = UserMapping.findByDeviceMac(params.deviceMac.toString()) ?: new UserMapping()
+        userMapping.deviceMac = params.deviceMac
+        userMapping.client = Client.findByTenantId(params.currentTenantId.toString())
+        userMapping.save()
     }
 
 }

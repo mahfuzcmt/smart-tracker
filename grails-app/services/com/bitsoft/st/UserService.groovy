@@ -2,22 +2,37 @@ package com.bitsoft.st
 
 import com.bitsoft.st.utils.AppConstant
 import com.bitsoft.st.utils.AppUtil
+import com.sun.org.apache.xpath.internal.operations.Bool
+import grails.converters.JSON
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
+import grails.util.Holders
+import org.omg.CORBA.Environment
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 @CurrentTenant
-@Transactional
 class UserService {
 
     AppUtilService appUtilService
     DecimalFormat decimalFormat = new DecimalFormat("#.00")
 
+
+    Boolean saveUserMapping(String currentTenantId, String deviceMac){
+        String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
+        if(grails.util.Environment.isDevelopmentMode()){
+            prod_end_pont = "http://localhost:8080/"
+        }
+        URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}").openConnection()
+        String response = get?.getInputStream()?.getText()
+        return JSON.parse(response).status == "success"
+    }
+
+    @Transactional
     def saveUser(Map params) {
         try {
-            if(AppUtil.session[AppConstant.SESSION_ATTRIBUTE.LIMIT] >= User.countByStatus(AppConstant.STATUS.ACTIVE)){
+            if(AppUtil.session[AppConstant.SESSION_ATTRIBUTE.LIMIT] <= User.countByStatus(AppConstant.STATUS.ACTIVE)){
                 throw new Exception("User Limit is over. Contact with your administrator.")
             }
 
@@ -33,7 +48,11 @@ class UserService {
                     appUtilService.printError(user)
                     return false
                 } else {
-                    return user?.id
+                    if(saveUserMapping(AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac)){
+                        return user?.id
+                    }else {
+                        return false
+                    }
                 }
             } else {
                 appUtilService.printError(user)
@@ -67,7 +86,7 @@ class UserService {
         }
     }
 
-    def loadUsers(def params) {
+    List<User> loadUsers(def params) {
         List<User> users
         try {
             params.max = params.max ?: -1
@@ -86,9 +105,12 @@ class UserService {
         return users
     }
 
-    User getUserById(long Id) {
-        def user = User.get(Id)
-        return user
+    User getUserById(Long Id) {
+        return User.get(Id)
+    }
+
+    User getUserByDeviceMac(String deviceMac) {
+        return User.findByDeviceMac(deviceMac)
     }
 
     String getUserFullNameByKounterId(Long kounterId) {

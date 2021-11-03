@@ -1,3 +1,4 @@
+prod_end_pont: "http://45.86.70.142:8080/st/"
 environments:
   development:
     # tag::dataSources[]

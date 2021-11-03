@@ -1,5 +1,6 @@
 package com.bitsoft.st
 
+import com.bitsoft.st.security.common.Client
 import com.bitsoft.st.utils.AppConstant
 import org.grails.datastore.mapping.multitenancy.web.SessionTenantResolver
 
@@ -9,10 +10,10 @@ class ApplicationInterceptor {
         matchAll()
     }
 
-    static excludeActions = ["createClient", "getAvailableEntity"]
+    static excludeControllers = ["client"]
 
     boolean before() {
-        if(actionName in excludeActions){
+        if(controllerName in excludeControllers){
             return true
         }
         String tenantId = request.JSON.tenantId ?: params.tenantId
