@@ -45,6 +45,7 @@ class ClientService {
             userData.userId = userMapping.userId
             userData.deviceMac = userMapping.deviceMac
             userData.orgName = userMapping.client.name
+            userData.syncLocInMin = userMapping.syncLocInMin ?: userMapping.client.syncLocInMin
             userData.tenantId = userMapping.client.tenantId
         }
         return userData
@@ -56,6 +57,7 @@ class ClientService {
         userMapping.userId = params.userId.toLong()
         userMapping.status = params.status
         userMapping.deviceMac = params.deviceMac
+        userMapping.syncLocInMin = params.syncLocInMin.toInteger()
         userMapping.client = Client.findByTenantId(params.currentTenantId.toString())
         userMapping.save()
     }

@@ -19,22 +19,22 @@ class UserService {
 
     AppUtilService appUtilService
 
-    Boolean saveUserMapping(Long userId, String currentTenantId, String deviceMac, String status){
+    Boolean saveUserMapping(User user, String currentTenantId){
         String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
         if(grails.util.Environment.isDevelopmentMode()){
             prod_end_pont = "http://localhost:8080/"
         }
-        URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}&userId=${userId}&status=${status}").openConnection()
+        URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${user.deviceMac}&userId=${user.id}&status=${user.status}&syncLocInMin=${user.syncLocInMin}").openConnection()
         String response = get?.getInputStream()?.getText()
         return JSON.parse(response).status == "success"
     }
 
-    Boolean deleteUserMapping(Long userId, String currentTenantId, String deviceMac){
+    Boolean deleteUserMapping(User user, String currentTenantId){
         String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
         if(grails.util.Environment.isDevelopmentMode()){
             prod_end_pont = "http://localhost:8080/"
         }
-        URLConnection get = new URL("${prod_end_pont}client/deleteUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}&userId=${userId}").openConnection()
+        URLConnection get = new URL("${prod_end_pont}client/deleteUserMapping?currentTenantId=${currentTenantId}&deviceMac=${user.deviceMac}&userId=${user.id}").openConnection()
         String response = get?.getInputStream()?.getText()
         return JSON.parse(response).status == "success"
     }
@@ -58,7 +58,7 @@ class UserService {
                     appUtilService.printError(user)
                     return false
                 } else {
-                    if(saveUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac, user.status)){
+                    if(saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())){
                         return user?.id
                     }else {
                         return false
@@ -90,7 +90,7 @@ class UserService {
         user.properties = params
         if (user.validate()) {
             user.save()
-            saveUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac, user.status)
+            saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())
             return true
         } else {
             return false
@@ -183,7 +183,7 @@ class UserService {
             if (user) {
                 beforeUserDelete(user)
                 user.delete()
-                deleteUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac)
+                deleteUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())
                 return true
             }
         } catch (Exception exception) {

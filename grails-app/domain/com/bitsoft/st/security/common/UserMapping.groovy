@@ -9,6 +9,8 @@ class UserMapping {
     String deviceMac
     String status = AppConstant.STATUS.ACTIVE
 
+    Integer syncLocInMin = 10
+
     Client client
 
     Date created
