@@ -1,5 +1,6 @@
 package com.bitsoft.st
 
+import com.bitsoft.st.security.OperationLog
 import com.bitsoft.st.utils.AppConstant
 import com.bitsoft.st.utils.AppUtil
 import com.sun.org.apache.xpath.internal.operations.Bool
@@ -7,6 +8,7 @@ import grails.converters.JSON
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 import grails.util.Holders
+import org.mortbay.util.StringUtil
 import org.omg.CORBA.Environment
 
 import java.text.DecimalFormat
@@ -16,15 +18,23 @@ import java.text.SimpleDateFormat
 class UserService {
 
     AppUtilService appUtilService
-    DecimalFormat decimalFormat = new DecimalFormat("#.00")
 
-
-    Boolean saveUserMapping(String currentTenantId, String deviceMac){
+    Boolean saveUserMapping(Long userId, String currentTenantId, String deviceMac, String status){
         String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
         if(grails.util.Environment.isDevelopmentMode()){
             prod_end_pont = "http://localhost:8080/"
         }
-        URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}").openConnection()
+        URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}&userId=${userId}&status=${status}").openConnection()
+        String response = get?.getInputStream()?.getText()
+        return JSON.parse(response).status == "success"
+    }
+
+    Boolean deleteUserMapping(Long userId, String currentTenantId, String deviceMac){
+        String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
+        if(grails.util.Environment.isDevelopmentMode()){
+            prod_end_pont = "http://localhost:8080/"
+        }
+        URLConnection get = new URL("${prod_end_pont}client/deleteUserMapping?currentTenantId=${currentTenantId}&deviceMac=${deviceMac}&userId=${userId}").openConnection()
         String response = get?.getInputStream()?.getText()
         return JSON.parse(response).status == "success"
     }
@@ -48,7 +58,7 @@ class UserService {
                     appUtilService.printError(user)
                     return false
                 } else {
-                    if(saveUserMapping(AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac)){
+                    if(saveUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac, user.status)){
                         return user?.id
                     }else {
                         return false
@@ -80,6 +90,7 @@ class UserService {
         user.properties = params
         if (user.validate()) {
             user.save()
+            saveUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac, user.status)
             return true
         } else {
             return false
@@ -148,11 +159,33 @@ class UserService {
         return AppUtil.infoMessage("Password Changed")
     }*/
 
+
+    void beforeUserDelete(User user) {
+        OperationLog.createCriteria().list {
+            eq("user.id", user.id)
+        }.each { OperationLog operationLog ->
+            operationLog.user = null
+            operationLog.merge()
+        }
+
+        LocationLog.createCriteria().list {
+            eq("user.id", user.id)
+        }.each { LocationLog locationLog ->
+            locationLog.user = null
+            locationLog.merge()
+        }
+    }
+
+    @Transactional
     def deleteUser(def id) {
         try {
-            def user = User.get(id)
-            user.delete()
-            return true
+            User user = User.get(id)
+            if (user) {
+                beforeUserDelete(user)
+                user.delete()
+                deleteUserMapping(user.id, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString(), user.deviceMac)
+                return true
+            }
         } catch (Exception exception) {
             log.error(exception.message)
             return false

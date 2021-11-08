@@ -39,9 +39,10 @@ class ClientService {
     }
 
     Map getByDeviceMac(params) {
-        UserMapping userMapping = UserMapping.findByDeviceMac(params.deviceMac)
+        UserMapping userMapping = UserMapping.findByDeviceMacAndStatus(params.deviceMac, AppConstant.STATUS.ACTIVE)
         Map userData = [:]
         if(userMapping){
+            userData.userId = userMapping.userId
             userData.deviceMac = userMapping.deviceMac
             userData.orgName = userMapping.client.name
             userData.tenantId = userMapping.client.tenantId
@@ -49,11 +50,23 @@ class ClientService {
         return userData
     }
 
+    @Transactional
     UserMapping saveUserMapping(Map params) {
         UserMapping userMapping = UserMapping.findByDeviceMac(params.deviceMac.toString()) ?: new UserMapping()
+        userMapping.userId = params.userId.toLong()
+        userMapping.status = params.status
         userMapping.deviceMac = params.deviceMac
         userMapping.client = Client.findByTenantId(params.currentTenantId.toString())
         userMapping.save()
+    }
+
+    @Transactional
+    Boolean deleteUserMapping(Map params) {
+        UserMapping userMapping = UserMapping.findByDeviceMacAndClientAndUserId(params.deviceMac.toString(), Client.findByTenantId(params.currentTenantId.toString()), params.userId.toLong())
+        if(userMapping){
+            userMapping.delete()
+        }
+        return true
     }
 
 }

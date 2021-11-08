@@ -1,9 +1,13 @@
 package com.bitsoft.st.security.common
 
+import com.bitsoft.st.utils.AppConstant
+
 class UserMapping {
 
     Long id
+    Long userId
     String deviceMac
+    String status = AppConstant.STATUS.ACTIVE
 
     Client client
 

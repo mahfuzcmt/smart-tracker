@@ -22,8 +22,8 @@ class LocationService {
     LocationLog saveLocationLog(Map params) {
         try {
             LocationLog locationLog = new LocationLog()
-            if (params.id) {
-                locationLog.user = userService.getUserById(params.id.toLong())
+            if (params.userId) {
+                locationLog.user = userService.getUserById(params.userId.toLong())
             } else {
                 locationLog.identifier = System.currentTimeMillis()
             }

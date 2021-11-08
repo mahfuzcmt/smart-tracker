@@ -16,6 +16,12 @@ class UserController {
     def save() {
         Map params = request.JSON
         if (securityService.isRequestValid(params.adminId?.toLong(), params.token)) {
+            if(!params.userName){
+                params.userName =  params.contactNo
+            }
+            if(!params.password){
+                params.password =  params.contactNo
+            }
             if (userService.loadUsers([colName: "userName", colValue: params.userName])) {
                 render([tatus: "error", message: "username already exits!"] as JSON)
             } else if (userService.loadUsers([colName: "contactNo", colValue: params.contactNo])) {

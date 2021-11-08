@@ -36,6 +36,14 @@ class ClientController {
         }
     }
 
+    def deleteUserMapping() {
+        if (clientService.deleteUserMapping(params)) {
+            render([status: "success"] as JSON)
+        } else {
+            render([status: "warning", message: "Sorry!"] as JSON)
+        }
+    }
+
     def getByDeviceMac() {
         Map params = request.JSON
         Map userData = clientService.getByDeviceMac(params)
