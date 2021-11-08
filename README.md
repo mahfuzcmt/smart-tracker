@@ -43,11 +43,11 @@ Response:
 http://45.86.70.142:8080/st/location/save?tenantId=TENANT_ID
 
 {
-	userId: "2"
+	userId: "4",
 	charge: "50%",
-	lat: "",
-	lng: "",
-	deviceInfo: ""
+	lat: "23.544987",
+	lng: "89.1726",
+	deviceInfo: "{}"
 
 }
 
@@ -56,18 +56,18 @@ Response:
 {
   "status": "success",
   "locationLog": {
-    "id": 24,
-    "created": "2021-11-08T10:41:17Z",
-    "lat": 5423545.0,
-    "address": null,
-    "updated": "2021-11-08T10:41:17Z",
-    "deviceInfo": "54325",
+    "id": 20,
+    "created": "2021-11-08T11:02:33Z",
+    "lat": 23.544987,
+    "address": "20, Jhenaidah, Bangladesh",
+    "updated": "2021-11-08T11:02:33Z",
+    "deviceInfo": "{}",
     "user": {
-      "id": 14
+      "id": 4
     },
     "charge": "50%",
     "identifier": null,
-    "lng": 324535.0
+    "lng": 89.1726
   },
-  "syncLocInMin": 25
+  "syncLocInMin": 5
 }
