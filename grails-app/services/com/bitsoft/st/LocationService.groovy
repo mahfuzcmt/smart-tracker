@@ -75,7 +75,13 @@ class LocationService {
             String lang = params.lang ?: "en"
             String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${AppConstant.GOOGLE_API_KEY}&language=${lang}"
             String json = HttpUtil.doGetRequest(url, ["Content-Type" : "application/json; charset=UTF-8"])
+            if (params.debug) {
+                println("==================json: " + json + "====================")
+            }
             Map result = JSON.parse(json)
+            if (params.debug) {
+                println("==================result: " + result + "====================")
+            }
             if (result && result.results) {
                 if (params.debug) {
                     println("==================" + result.results[0].formatted_address + "====================")
