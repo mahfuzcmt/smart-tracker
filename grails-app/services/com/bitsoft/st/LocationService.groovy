@@ -2,6 +2,8 @@ package com.bitsoft.st
 
 import com.bitsoft.st.utils.AppConstant
 import com.bitsoft.st.utils.DateTimeUtil
+import com.bitsoft.st.utils.HttpUtil
+import grails.converters.JSON
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 import groovy.json.JsonSlurper
@@ -33,7 +35,7 @@ class LocationService {
             locationLog.lat = params.lat.toDouble()
             locationLog.lng = params.lng.toDouble()
             locationLog.deviceInfo = params.deviceInfo
-            locationLog.address = getAddressByLatAndLng(params.lat, params.lng)
+            locationLog.address = getAddressByLatAndLng(params)
             locationLog.save()
             if (!locationLog.hasErrors()) {
                 return locationLog
@@ -66,13 +68,19 @@ class LocationService {
     }
 
 
-    String getAddressByLatAndLng(String lat, String lng) {
+    String getAddressByLatAndLng(Map params) {
         try {
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${AppConstant.GOOGLE_API_KEY}"
-            String response = url.toURL().text
-            Map responseObj = new JsonSlurper().parseText(response)
-            if (responseObj && responseObj.results) {
-                return responseObj.results[0].formatted_address
+            String lat = params.lat
+            String lng = params.lng
+            String lang = params.lang ?: "en"
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${AppConstant.GOOGLE_API_KEY}&language=${lang}"
+            String json = HttpUtil.doGetRequest(url, ["Content-Type" : "application/json; charset=UTF-8"])
+            Map result = JSON.parse(json)
+            if (result && result.results) {
+                if (params.debug) {
+                    println("==================" + result.results[0].formatted_address + "====================")
+                }
+                return result.results[0].formatted_address
             }
         } catch (Exception e) {
             log.error(e.message)
