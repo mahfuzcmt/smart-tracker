@@ -21,6 +21,11 @@ class LocationService {
 
     DecimalFormat decimalFormat = new DecimalFormat("#.00")
 
+
+    LocationLog getLocationLogById(Long id){
+        return LocationLog.get(id)
+    }
+
     LocationLog saveLocationLog(Map params) {
         try {
             LocationLog locationLog = new LocationLog()
@@ -48,10 +53,48 @@ class LocationService {
         }
     }
 
-    List<LocationLog> getLocationLogsByUser(Map params) {
-        return LocationLog.createCriteria().list {
+    Map processLocationData(LocationLog locationLog) {
+        Map locData = [:]
+        if (locationLog) {
+            locData.lat = locationLog.lat
+            locData.lng = locationLog.lng
+            locData.address = locationLog.address
+            locData.created = DateTimeUtil.getFormattedDate(locationLog.created)
+            if (locationLog.user) {
+                locData.userId = locationLog.user.id
+                locData.fullName = locationLog.user.fullName
+                locData.contactNo = locationLog.user.contactNo
+                locData.imagePath = locationLog.user.getFullImagePath()
+                locData.designation = locationLog.user.designation
+            }
+        }
+        return locData
+    }
+
+    List<Map> getLiveLoc(Map params){
+        List data = []
+        User.createCriteria().list {
+            eq("status", AppConstant.STATUS.ACTIVE)
             if (params.userId) {
-                eq("user.id", params.userId?.toLong())
+                eq("user.id", params.userId.toLong())
+            }
+        }.each { User user ->
+            Long lastLocId = LocationLog.createCriteria().get() {
+                eq("user.id", user.id)
+                projections {
+                    max("id")
+                }
+            }
+            data.add(processLocationData(getLocationLogById(lastLocId)))
+        }
+        return data
+    }
+
+    List<Map> getLocationLogsByUser(Map params) {
+        List<Map> data = []
+        List<LocationLog> locationLogList = LocationLog.createCriteria().list {
+            if (params.userId) {
+                eq("user.id", params.userId.toLong())
             }
             if (params.identifier) {
                 eq("identifier", params.identifier)
@@ -59,6 +102,10 @@ class LocationService {
             between("created", DateTimeUtil.getDateFromStringForReport(params.startDate) ?: DateTimeUtil.startOfTheDay(), DateTimeUtil.getDateFromStringForReport(params.endDate) ?: DateTimeUtil.endOfTheDay())
             order("created", "desc")
         }
+        locationLogList.each { LocationLog locationLog ->
+            data.add(processLocationData(locationLog))
+        }
+        return data
     }
 
     List<LocationLog> getLocationLogsByIdentifier(String identifier) {

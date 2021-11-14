@@ -28,7 +28,21 @@ class LocationController {
     def list() {
         Map params = request.JSON
         if (securityService.isRequestValid(params.adminId?.toLong(), params.token)) {
-            List<LocationLog> locationLogList = locationService.getLocationLogsByUser(params)
+            List<Map> locationLogList = locationService.getLocationLogsByUser(params)
+            if (locationLogList) {
+                render([status: "success", locationLogs: locationLogList] as JSON)
+            } else {
+                render([status: "warning", message: "Sorry!"] as JSON)
+            }
+        } else {
+            render([status: "error", message: "Unauthorized access!"] as JSON)
+        }
+    }
+
+    def liveLoc() {
+        Map params = request.JSON
+        if (securityService.isRequestValid(params.adminId?.toLong(), params.token)) {
+            List<Map> locationLogList = locationService.getLiveLoc(params)
             if (locationLogList) {
                 render([status: "success", locationLogs: locationLogList] as JSON)
             } else {

@@ -3,6 +3,7 @@ package com.bitsoft.st
 import com.bitsoft.st.security.OperationLog
 import com.bitsoft.st.utils.AppConstant
 import com.bitsoft.st.utils.AppUtil
+import com.bitsoft.st.utils.Base64DataInputStream
 import com.sun.org.apache.xpath.internal.operations.Bool
 import grails.converters.JSON
 import grails.gorm.multitenancy.CurrentTenant
@@ -10,6 +11,7 @@ import grails.gorm.transactions.Transactional
 import grails.util.Holders
 import org.mortbay.util.StringUtil
 import org.omg.CORBA.Environment
+import org.springframework.web.multipart.MultipartFile
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -39,6 +41,22 @@ class UserService {
         return JSON.parse(response).status == "success"
     }
 
+    void addProductImage(User user, Map params) {
+        String encoded = params.base64Image
+        encoded.replaceAll("\r", "")
+        encoded.replaceAll("\n", "")
+        byte[] decoded = encoded.decodeBase64()
+        String imagePath = "${AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString()}/images/users/user-${user.id}.png"
+        File file = new File(imagePath)
+        file.getParentFile().mkdirs()
+        file.createNewFile()
+        file.withOutputStream {
+            it.write(decoded)
+        }
+        user.imagePath = file.path
+        user.merge()
+    }
+
     @Transactional
     def saveUser(Map params) {
         try {
@@ -58,6 +76,7 @@ class UserService {
                     appUtilService.printError(user)
                     return false
                 } else {
+                    addProductImage(user, params)
                     if(saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())){
                         return user?.id
                     }else {
@@ -76,7 +95,7 @@ class UserService {
     }
 
     @Transactional
-    def updateUser(def params) {
+    def updateUser(Map params) {
         Long id = params?.id?.toLong()
         User user = getUserById(id)
         if (!user) {
@@ -90,6 +109,7 @@ class UserService {
         user.properties = params
         if (user.validate()) {
             user.save()
+            addProductImage(user, params)
             saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())
             return true
         } else {

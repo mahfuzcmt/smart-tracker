@@ -5,7 +5,7 @@ import java.time.Instant
 
 class DateTimeUtil {
 
-    public static String TICKET_DATE_TIME_FORMAT = "dd-MM-yyyy hh:mm:ss aa"
+    public static String DEFAULT_TIME_FORMAT = "dd-MM-yyyy hh:mm:ss aa"
     public static String INPUT_DATE_FORMAT= "yyyy-MM-dd HH:mm:ss"
     public static String REPORT_INPUT_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
@@ -25,7 +25,7 @@ class DateTimeUtil {
         }
     }
 
-    def static getFormattedDate(Date date, String format = TICKET_DATE_TIME_FORMAT) {
+    def static getFormattedDate(Date date, String format = DEFAULT_TIME_FORMAT) {
         try {
             return date.format(format)
         } catch (Exception e) {

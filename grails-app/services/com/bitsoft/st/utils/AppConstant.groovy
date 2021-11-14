@@ -19,11 +19,11 @@ class AppConstant {
         this.grailsApplication = grailsApplication
     }
     static String getProdBaseUrl(){
-        return this.grailsApplication.config.application.base_url
+        return this.grailsApplication.config.prod_end_pont
     }
 
     static String getDevBaseUrl(){
-        return this.grailsApplication.config.application.local_base_url
+        return this.grailsApplication.config.local_base_url
     }
 
     static String getPort(){

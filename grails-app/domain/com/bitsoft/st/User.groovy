@@ -15,6 +15,7 @@ class User implements MultiTenant<User> {
     String contactNo
     String deviceMac
     String status = AppConstant.STATUS.ACTIVE
+    String imagePath
 
     Integer syncLocInMin = 15
 
@@ -28,6 +29,7 @@ class User implements MultiTenant<User> {
         userName(nullable: false, unique: true, blank: false)
         deviceMac(nullable: true, unique: true, blank: true)
         designation(nullable: true)
+        imagePath(nullable: true)
         note(nullable: true)
         role(nullable: true, blank: true)
     }
@@ -39,5 +41,9 @@ class User implements MultiTenant<User> {
     def beforeValidate() {
         this.created = this.created ?: new Date()
         this.updated = this.updated ?: new Date()
+    }
+
+    String getFullImagePath(){
+        return "${AppConstant.getBaseUrl()}${this.imagePath}"
     }
 }
