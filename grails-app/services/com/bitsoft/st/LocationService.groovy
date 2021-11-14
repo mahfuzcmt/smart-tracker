@@ -59,6 +59,7 @@ class LocationService {
             locData.lat = locationLog.lat
             locData.lng = locationLog.lng
             locData.address = locationLog.address
+            locData.charge = locationLog.charge
             locData.created = DateTimeUtil.getFormattedDate(locationLog.created)
             if (locationLog.user) {
                 locData.userId = locationLog.user.id
