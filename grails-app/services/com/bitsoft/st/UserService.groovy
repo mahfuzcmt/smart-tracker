@@ -24,7 +24,7 @@ class UserService {
     Boolean saveUserMapping(User user, String currentTenantId){
         String prod_end_pont = Holders.grailsApplication.config['prod_end_pont']
         if(grails.util.Environment.isDevelopmentMode()){
-            prod_end_pont = "http://localhost:8080/"
+            prod_end_pont = "http://localhost:8888/"
         }
         URLConnection get = new URL("${prod_end_pont}client/saveUserMapping?currentTenantId=${currentTenantId}&deviceMac=${user.deviceMac}&userId=${user.id}&status=${user.status}&syncLocInMin=${user.syncLocInMin}").openConnection()
         String response = get?.getInputStream()?.getText()
@@ -76,7 +76,7 @@ class UserService {
                     appUtilService.printError(user)
                     return false
                 } else {
-                    addProductImage(user, params)
+                    //addProductImage(user, params)
                     if(saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())){
                         return user?.id
                     }else {
@@ -109,7 +109,7 @@ class UserService {
         user.properties = params
         if (user.validate()) {
             user.save()
-            addProductImage(user, params)
+            //addProductImage(user, params)
             saveUserMapping(user, AppUtil.session[AppConstant.SESSION_ATTRIBUTE.TENANT_ID].toString())
             return true
         } else {

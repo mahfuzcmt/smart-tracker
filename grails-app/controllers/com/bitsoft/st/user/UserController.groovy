@@ -23,16 +23,16 @@ class UserController {
                 params.password =  params.contactNo
             }
             if (userService.loadUsers([colName: "userName", colValue: params.userName])) {
-                render([tatus: "error", message: "username already exits!"] as JSON)
+                render([status: "error", message: "username already exits!"] as JSON)
             } else if (userService.loadUsers([colName: "contactNo", colValue: params.contactNo])) {
-                render([tatus: "error", message: "Contact No already exits!"] as JSON)
+                render([status: "error", message: "Contact No already exits!"] as JSON)
             } else if (userService.loadUsers([colName: "deviceMac", colValue: params.deviceMac])) {
-                render([tatus: "error", message: "Device Mac already exits!"] as JSON)
+                render([status: "error", message: "Device Mac already exits!"] as JSON)
             }  else {
                 if (userService.saveUser(params)) {
                     render([status: "success", message: "User successfully Saved"] as JSON)
                 } else {
-                    render([tatus: "error", message: "Sorry, failed to save user!"] as JSON)
+                    render([status: "error", message: "Sorry, failed to save user!"] as JSON)
                 }
             }
         } else {
@@ -81,11 +81,11 @@ class UserController {
                     newObj.id = user.id
                     newObj.fullName = user.fullName
                     newObj.userName = user.userName
-                    newObj.counterName = (user.respectiveCounterId && user.role == null) ? kounterService.getCounterById(user.respectiveCounterId)?.name : ""
-                    newObj.role = securityService.getRoleNameByUser(user) ?: "Counter Master"
+                    newObj.role = securityService.getRoleNameByUser(user) ?: ""
                     newObj.status = user.status
-                    newObj.shift = user.shift
                     newObj.contact = user.contactNo
+                    newObj.designation = user.designation
+                    newObj.syncLocInMin = user.syncLocInMin
                     dataList.add(newObj)
                 }
                 render([status: "success", data: dataList, totalCount: dataList.size()] as JSON)
@@ -110,6 +110,7 @@ class UserController {
             editableData.password = user.password
             editableData.role = securityService.getRoleNameByUser(user) ?: AppConstant.ROLE.USER
 
+            editableData.designation = user.designation
             editableData.syncLocInMin = user.syncLocInMin
             editableData.contactNo = user.contactNo
             editableData.status = user.status
@@ -129,7 +130,7 @@ class UserController {
             editableData.fullName = user.fullName
             editableData.password = user.password
             editableData.role = securityService.getRoleNameByUser(user) ?: AppConstant.ROLE.USER
-
+            editableData.designation = user.designation
             if(user.deviceMac){
                 editableData.deviceMac = user.deviceMac
                 //TODO get org info from default db
