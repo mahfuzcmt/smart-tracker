@@ -79,7 +79,7 @@ hibernate:
     use_query_cache: false
 
 server:
-  port: 8080
+  port: 8888
 
 grails:
   cors:
