@@ -80,6 +80,7 @@ class UserController {
                     def newObj = [:]
                     newObj.id = user.id
                     newObj.fullName = user.fullName
+                    newObj.deviceMac = user.deviceMac
                     newObj.userName = user.userName
                     newObj.role = securityService.getRoleNameByUser(user) ?: ""
                     newObj.status = user.status
@@ -110,6 +111,7 @@ class UserController {
             editableData.password = user.password
             editableData.role = securityService.getRoleNameByUser(user) ?: AppConstant.ROLE.USER
 
+            editableData.deviceMac = user.deviceMac
             editableData.designation = user.designation
             editableData.syncLocInMin = user.syncLocInMin
             editableData.contactNo = user.contactNo
