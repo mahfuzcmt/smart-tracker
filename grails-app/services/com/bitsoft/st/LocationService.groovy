@@ -100,7 +100,9 @@ class LocationService {
             if (params.identifier) {
                 eq("identifier", params.identifier)
             }
-            between("created", DateTimeUtil.getDateFromStringForReport(params.startDate) ?: DateTimeUtil.startOfTheDay(), DateTimeUtil.getDateFromStringForReport(params.endDate) ?: DateTimeUtil.endOfTheDay())
+            if(!params.isAll?.toBoolean()){
+                between("created", DateTimeUtil.getDateFromStringForReport(params.startDate) ?: DateTimeUtil.startOfTheDay(), DateTimeUtil.getDateFromStringForReport(params.endDate) ?: DateTimeUtil.endOfTheDay())
+            }
             order("created", "desc")
         }
         locationLogList.each { LocationLog locationLog ->

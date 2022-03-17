@@ -26,7 +26,6 @@ class LocationController {
     }
 
     def list() {
-        Map params = request.JSON
         if (securityService.isRequestValid(params.adminId?.toLong(), params.token)) {
             List<Map> locationLogList = locationService.getLocationLogsByUser(params)
             if (locationLogList) {
