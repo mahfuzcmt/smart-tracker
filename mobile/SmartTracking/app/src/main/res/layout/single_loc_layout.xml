@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/user_photo"
+                android:layout_width="0dp"
+                android:layout_weight="0.30"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.70"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/user_name"
+                    android:padding="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Md Ashadul Islam"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/user_desg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:textColor="@color/black"
+                    android:text="Software Engineer"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/user_mobile"
+                android:layout_width="0dp"
+                android:layout_weight="0.50"
+                android:padding="4dp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:text="01751284383"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/mobile_charge"
+                android:layout_width="0dp"
+                android:padding="4dp"
+                android:textColor="@color/black"
+                android:layout_weight="0.50"
+                android:layout_height="wrap_content"
+                android:text="36%"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_lat_lng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LatLng: 23.16464654, 90.4654981651"
+            android:padding="4dp"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/user_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@color/black"
+            android:text=" Dhaka-1207, Bangladesh"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/loc_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@color/black"
+            android:text="10:10 AM, March 18, 2022"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

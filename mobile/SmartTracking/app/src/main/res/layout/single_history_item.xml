@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/serial"
+            android:layout_width="match_parent"
+            android:text="#0"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:layout_weight="2"
+            android:gravity="left"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/battery_life"
+            android:layout_width="match_parent"
+            android:text="Battery: "
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:layout_weight="2"
+            android:gravity="left"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/device_latlng"
+        android:layout_width="match_parent"
+        android:text="LatLng: "
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:gravity="left"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:text="Address: "
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:gravity="left"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/created_at"
+        android:layout_width="match_parent"
+        android:text="Created: "
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:gravity="left"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/update_at"
+        android:layout_width="match_parent"
+        android:text="Updated: "
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:gravity="left"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
