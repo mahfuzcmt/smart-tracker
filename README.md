@@ -10,8 +10,7 @@ http://localhost:8080/security/init/?tenantId=test2
 "userName": "userName", //password will be same
 }
 
-
-http://45.86.70.142:8080/st/user/save?tenantId=TENANT_ID
+http://localhost:8080/user/save?tenantId=TENANT_ID
 
 {
  fullName: "Mahfuz Ahmed",
@@ -19,8 +18,7 @@ http://45.86.70.142:8080/st/user/save?tenantId=TENANT_ID
  deviceMac: "123",
  syncLocInMin: 5,
 }
-
-http://45.86.70.142:8080/st/client/getByDeviceMac
+http://localhost:8080/client/getByDeviceMac
 Request:
 {
  deviceMac: "123"
@@ -40,7 +38,7 @@ Response:
 
 
 
-http://45.86.70.142:8080/st/location/save?tenantId=TENANT_ID
+http://localhost:8080/location/save?tenantId=TENANT_ID
 
 {
 	userId: "4",
