@@ -18,6 +18,7 @@ class LocationLog implements MultiTenant<LocationLog> {
     Double lat
     Double lng
 
+    Date trackingTime
     Date created
     Date updated
 
@@ -28,6 +29,7 @@ class LocationLog implements MultiTenant<LocationLog> {
         charge(nullable: true)
         deviceInfo(nullable: true)
         address(nullable: true)
+        trackingTime(nullable: true)
     }
 
     def beforeUpdate = {

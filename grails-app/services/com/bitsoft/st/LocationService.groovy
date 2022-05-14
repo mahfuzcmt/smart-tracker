@@ -26,30 +26,38 @@ class LocationService {
         return LocationLog.get(id)
     }
 
-    LocationLog saveLocationLog(Map params) {
+    List<LocationLog> saveLocationLog(Map params) {
+        List<LocationLog> locationLogList = []
         try {
-            LocationLog locationLog = new LocationLog()
-            if (params.userId) {
-                locationLog.user = userService.getUserById(params.userId.toLong())
-            } else {
-                locationLog.identifier = System.currentTimeMillis()
-            }
+            LocationLog locationLog
+            params.locations.each { Map location ->
+                locationLog = new LocationLog()
+                if (params.userId) {
+                    locationLog.user = userService.getUserById(params.userId.toLong())
+                } else {
+                    locationLog.identifier = System.currentTimeMillis()
+                }
+                locationLog.charge = location.charge
 
-            locationLog.charge = params.charge
-
-            locationLog.lat = params.lat.toDouble()
-            locationLog.lng = params.lng.toDouble()
-            locationLog.deviceInfo = params.deviceInfo
-            locationLog.address = getAddressByLatAndLng(params)
-            locationLog.save()
-            if (!locationLog.hasErrors()) {
-                return locationLog
+                locationLog.lat = location.lat.toDouble()
+                locationLog.lng = location.lng.toDouble()
+                if (location.datetime) {
+                    locationLog.trackingTime = DateTimeUtil.getDateFromString(location.datetime, "yyyy-MM-dd hh:mm a")
+                }
+                if (params.deviceInfo) {
+                    locationLog.deviceInfo = params.deviceInfo as String
+                }
+                locationLog.address = getAddressByLatAndLng(location)
+                locationLog.save()
+                if (locationLog && !locationLog.hasErrors()) {
+                    locationLogList.add(locationLog)
+                }
             }
-            return null
+            return locationLogList
         }
         catch (Exception e) {
             log.error(e.message)
-            return null
+            return locationLogList
         }
     }
 
@@ -118,22 +126,22 @@ class LocationService {
     }
 
 
-    String getAddressByLatAndLng(Map params) {
+    String getAddressByLatAndLng(Map location) {
         try {
-            String lat = params.lat
-            String lng = params.lng
-            String lang = params.lang ?: "en"
+            String lat = location.lat
+            String lng = location.lng
+            String lang = location.lang ?: "en"
             String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${AppConstant.GOOGLE_API_KEY}&language=${lang}"
             String json = HttpUtil.doGetRequest(url, ["Content-Type" : "application/json; charset=UTF-8"])
-            if (params.debug) {
+            if (location.debug) {
                 println("==================json: " + json + "====================")
             }
             Map result = JSON.parse(json)
-            if (params.debug) {
+            if (location.debug) {
                 println("==================result: " + result + "====================")
             }
             if (result && result.results) {
-                if (params.debug) {
+                if (location.debug) {
                     println("==================" + result.results[0].formatted_address + "====================")
                 }
                 return result.results[0].formatted_address

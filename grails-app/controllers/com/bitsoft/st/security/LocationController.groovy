@@ -13,13 +13,14 @@ class LocationController {
 
     def save() {
         Map params = request.JSON
-        LocationLog locationLog = locationService.saveLocationLog(params)
-        if (locationLog) {
+        List<LocationLog> locationLogs = locationService.saveLocationLog(params)
+        if (locationLogs) {
+            LocationLog locationLog = locationLogs.first()
             Integer syncLocInMin = 0
             if(locationLog.user){
                 syncLocInMin = userService.getUserById(locationLog.user.id)?.syncLocInMin ?: 0
             }
-            render([status: "success", locationLog: locationLog, syncLocInMin: syncLocInMin] as JSON)
+            render([status: "success", locationLogs: locationLogs, syncLocInMin: syncLocInMin] as JSON)
         } else {
             render([status: "warning", message: "Sorry!"] as JSON)
         }
