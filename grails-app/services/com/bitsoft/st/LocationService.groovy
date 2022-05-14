@@ -68,6 +68,7 @@ class LocationService {
             locData.lng = locationLog.lng
             locData.address = locationLog.address
             locData.charge = locationLog.charge
+            locData.trackingTime = DateTimeUtil.getFormattedDate(locationLog.trackingTime)
             locData.created = DateTimeUtil.getFormattedDate(locationLog.created)
             if (locationLog.user) {
                 locData.userId = locationLog.user.id
@@ -85,7 +86,7 @@ class LocationService {
         User.createCriteria().list {
             eq("status", AppConstant.STATUS.ACTIVE)
             if (params.userId) {
-                eq("user.id", params.userId.toLong())
+                eq("id", params.userId.toLong())
             }
         }.each { User user ->
             Long lastLocId = LocationLog.createCriteria().get() {

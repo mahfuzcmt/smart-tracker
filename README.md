@@ -13,10 +13,25 @@ http://localhost:8080/security/init/?tenantId=test2
 http://localhost:8080/user/save?tenantId=TENANT_ID
 
 {
- fullName: "Mahfuz Ahmed",
- contactNo: "01975585960",
- deviceMac: "123",
- syncLocInMin: 5,
+  "userId": 1,
+  "locations": [
+    {
+      "charge": "92%",
+      "lat": "23.72488500",
+      "lng": "90.40253000",
+      "datetime": "2022-05-14 11:32 AM"
+    }
+  ],
+  "deviceInfo": {
+    "mac_address": "0C:25:76:53:23:4C",
+    "android_id": "dca2d1e754bb7a70",
+    "os_version": "4.4.22+",
+    "android_sdk": "25",
+    "brand": "SUNMI",
+    "device_name": "V2",
+    "device_manufacturer": "SUNMI"
+  },
+  "tenantId": "tenant-1"
 }
 http://localhost:8080/client/getByDeviceMac
 Request:
