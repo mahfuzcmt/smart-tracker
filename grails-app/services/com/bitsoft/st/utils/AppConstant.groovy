@@ -22,6 +22,10 @@ class AppConstant {
         return this.grailsApplication.config.prod_end_point
     }
 
+    static String getProdImageUrl(){
+        return this.grailsApplication.config.prod_image_location
+    }
+
     static String getDevBaseUrl(){
         return this.grailsApplication.config.local_base_url
     }
@@ -108,14 +112,14 @@ class AppConstant {
         ]
     }
 
-    static String getBaseUrl(){
+    static String getProdImageLocation(){
         if (grails.util.Environment.current.equals(grails.util.Environment.DEVELOPMENT)) {
-            return getDevBaseUrl()
+            return ""
         } else if (grails.util.Environment.current.equals(grails.util.Environment.PRODUCTION)) {
-            return getProdBaseUrl()
-
+            return getProdImageUrl()
         }
     }
+
 
     static String rootPathOfProd = "${File.separator}var${File.separator}lib${File.separator}tomcat8/webapps${File.separator}"
 

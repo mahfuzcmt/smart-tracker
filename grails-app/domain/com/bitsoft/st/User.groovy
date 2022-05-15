@@ -44,6 +44,6 @@ class User implements MultiTenant<User> {
     }
 
     String getFullImagePath(){
-        return "${AppConstant.getBaseUrl()}${this.imagePath}"
+        return "${AppConstant.getProdImageLocation()}${this.imagePath}"
     }
 }
