@@ -1,4 +1,4 @@
-prod_end_pont: "http://45.86.70.142:8080/"
+prod_end_point: "http://45.86.70.142:8080/st/"
 local_base_url: "http://localhost:8080/"
 environments:
   development:

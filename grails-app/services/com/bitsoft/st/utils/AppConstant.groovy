@@ -19,7 +19,7 @@ class AppConstant {
         this.grailsApplication = grailsApplication
     }
     static String getProdBaseUrl(){
-        return this.grailsApplication.config.prod_end_pont
+        return this.grailsApplication.config.prod_end_point
     }
 
     static String getDevBaseUrl(){
