@@ -5,6 +5,7 @@ import com.bitsoft.st.UserService
 import com.bitsoft.st.security.SecurityService
 import com.bitsoft.st.utils.AppConstant
 import grails.converters.JSON
+import org.springframework.web.multipart.MultipartFile
 
 class UserController {
 
@@ -37,6 +38,17 @@ class UserController {
             }
         } else {
             render([status: "error", message: "Unauthorized access!"] as JSON)
+        }
+    }
+
+    def uploadPic() {
+        Map params = request.JSON
+        params.userId = "1"
+        MultipartFile profilePic = request.getFile('file')
+        if (userService.uploadPicture(params.userId.toLong(), profilePic)) {
+            render([status: "success", message: "User picture has been updated successfully!"] as JSON)
+        } else {
+            render([status: "error", message: "Sorry, failed to upload user picture!"] as JSON)
         }
     }
 

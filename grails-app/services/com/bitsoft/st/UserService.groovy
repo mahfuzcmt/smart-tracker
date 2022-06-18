@@ -117,6 +117,22 @@ class UserService {
         }
     }
 
+
+    @Transactional
+    def uploadPicture(Long userId, MultipartFile profilePic) {
+        try {
+            //TODO need to save as file in directory
+            User user = getUserById(userId)
+            user.imagePath = profilePic.getBytes()
+            user.save()
+        }
+        catch (Exception e) {
+            log.error(e.message)
+            return false
+        }
+        return true
+    }
+
     List<User> loadUsers(def params) {
         List<User> users
         try {
