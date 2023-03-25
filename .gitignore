@@ -10,8 +10,3 @@ out/
 .project
 .settings
 .classpath
-.gitignore
-/mobile/SmartTracking/background-service/
-/mobile/SmartTracking/app/release
-/mobile/SmartTracking/app/build
-/mobile/SmartTracking/test

@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+/background-service
+/app/release
+/app/build
