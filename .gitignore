@@ -12,3 +12,5 @@ out/
 .classpath
 .gitignore
 mobile/SmartTracking/background-service/
+mobile/SmartTracking/app/release
+mobile/SmartTracking/app/build
