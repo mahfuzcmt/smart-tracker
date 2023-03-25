@@ -105,7 +105,6 @@ public class SplashActivity extends AppCompatActivity {
                             String TENANTID = object.isNull("tenantId") ? null : object.getString("tenantId");
                             Constants.USERID = userId;
                             Constants.LOGINSYNC = loginSync;
-                            Constants.LOGINSYNC = 10;
                             Constants.DEVICEMAC = DEVICEMAC;
                             Constants.ORGNAME = ORGNAME;
                             Constants.TENANTID = TENANTID;

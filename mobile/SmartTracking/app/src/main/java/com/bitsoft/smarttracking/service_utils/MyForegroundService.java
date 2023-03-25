@@ -232,7 +232,6 @@ public class MyForegroundService extends ServiceMasterAnis {
                         String status = jsonObject.isNull("status") ? "null" : jsonObject.getString("status");
                         if (status.equals("success")) {
                             int LOGINSYNC = jsonObject.isNull("syncLocInMin") ? Constants.LOGINSYNC : jsonObject.getInt("syncLocInMin");
-                            LOGINSYNC = Constants.LOGINSYNC+5;
                             if (LOGINSYNC != Constants.LOGINSYNC) {
                                 Constants.LOGINSYNC = LOGINSYNC;
                                 stoptimertask();
