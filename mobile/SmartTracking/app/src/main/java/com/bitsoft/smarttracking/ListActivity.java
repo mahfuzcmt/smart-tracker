@@ -1,25 +1,20 @@
 package com.bitsoft.smarttracking;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
-
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bitsoft.smarttracking.adapter.LocAdapter;
 import com.bitsoft.smarttracking.model.LocModel;
@@ -37,19 +32,15 @@ import java.util.concurrent.Executors;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-import static android.content.ContentValues.TAG;
-import static com.bitsoft.smarttracking.services.TracService.LOGINSYNC;
-import static com.bitsoft.smarttracking.services.TracService.USERID;
-import static com.bitsoft.smarttracking.services.TracService.USERTENANT;
-
 public class ListActivity extends AppCompatActivity {
 
     ArrayList<LocModel> locModelArrayList;
     LocAdapter locAdapter;
     ListView listViewLoc;
     ProgressBar progressBar;
-    TextView loadingText,emptyText;
+    TextView loadingText, emptyText;
     AlertDialog waitingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +50,7 @@ public class ListActivity extends AppCompatActivity {
         emptyText = (TextView) findViewById(R.id.empty_text);
         listViewLoc.setVisibility(View.GONE);
         emptyText.setVisibility(View.VISIBLE);
-        locModelArrayList= new ArrayList<>();
+        locModelArrayList = new ArrayList<>();
         AlertDialog.Builder dialog = new AlertDialog.Builder(ListActivity.this);
         dialog.setCancelable(false);
         LayoutInflater inflater1 = LayoutInflater.from(ListActivity.this);
@@ -69,13 +60,14 @@ public class ListActivity extends AppCompatActivity {
         loadingText.setText("Please wait...");
         dialog.setView(signin_layout_driver);
         waitingDialog = dialog.create();
-        getLocationList(Constants.TENANTID,true);
+        getLocationList(Constants.TENANTID, true);
     }
+
     private void getLocationList(final String tenantId, final boolean isAll) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
-            String response=null;
+            String response = null;
             handler.post(() -> {
                 waitingDialog.show();
                 Log.d("TAGGGGGGG", "Operation Started");
@@ -88,68 +80,68 @@ public class ListActivity extends AppCompatActivity {
                 obj.put("tenantId", tenantId);
                 obj.put("isAll", isAll);
                 RequestBody body = (RequestBody) RequestBody.create(mediaType, String.valueOf(obj));
-               // Log.d("URL ",Constants.BASEURL + Constants.LISTURL);
+                // Log.d("URL ",Constants.BASEURL + Constants.LISTURL);
                 //Log.d("REQUEST",String.valueOf(obj));
                 HttpAsynRequest httpRequest = new HttpAsynRequest();
                 response = httpRequest.sendRequest(body, Constants.BASEURL + Constants.LISTURL);
             } catch (Exception e) {
                 e.printStackTrace();
-                response=null;
+                response = null;
             }
             String res = response;
             handler.post(() -> {
                 waitingDialog.dismiss();
                 if (res == null || res.isEmpty()) {
-                    showRetry(tenantId,isAll,"Null! Something went error, Please try again");
+                    showRetry(tenantId, isAll, "Null! Something went error, Please try again");
                     return;
-                }else {
-                    Log.d("Resulttt ",res);
+                } else {
+                    Log.d("Resulttt ", res);
                     try {
-                        JSONObject jsonObject= new JSONObject(res);
-                        if (jsonObject.getString("status").equalsIgnoreCase("success")){
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                             JSONArray list = jsonObject.getJSONArray("locationLogs");
-                            if(list.length()>0){
+                            if (list.length() > 0) {
                                 locModelArrayList = new ArrayList<>();
-                                for (int j=0;j<list.length();j++){
+                                for (int j = 0; j < list.length(); j++) {
                                     JSONObject locData = list.getJSONObject(j);
                                     LocModel locModel = new LocModel(
-                                            locData.isNull("lat")?0: locData.getLong("lat"),
-                                            locData.isNull("lng")?0: locData.getLong("lng"),
-                                            locData.isNull("address")?"": locData.getString("address"),
-                                            locData.isNull("charge")?"": locData.getString("charge"),
-                                            locData.isNull("created")?"": locData.getString("created"),
-                                            locData.isNull("userId")?0: locData.getInt("userId"),
-                                            locData.isNull("fullName")?"": locData.getString("fullName"),
-                                            locData.isNull("contactNo")?"": locData.getString("contactNo"),
-                                            locData.isNull("imagePath")?"": locData.getString("imagePath"),
-                                            locData.isNull("designation")?"": locData.getString("designation")
+                                            locData.isNull("lat") ? 0 : locData.getLong("lat"),
+                                            locData.isNull("lng") ? 0 : locData.getLong("lng"),
+                                            locData.isNull("address") ? "" : locData.getString("address"),
+                                            locData.isNull("charge") ? "" : locData.getString("charge"),
+                                            locData.isNull("created") ? "" : locData.getString("created"),
+                                            locData.isNull("userId") ? 0 : locData.getInt("userId"),
+                                            locData.isNull("fullName") ? "" : locData.getString("fullName"),
+                                            locData.isNull("contactNo") ? "" : locData.getString("contactNo"),
+                                            locData.isNull("imagePath") ? "" : locData.getString("imagePath"),
+                                            locData.isNull("designation") ? "" : locData.getString("designation")
                                     );
                                     locModelArrayList.add(locModel);
                                 }
-                                locAdapter= new LocAdapter(ListActivity.this,locModelArrayList);
+                                locAdapter = new LocAdapter(ListActivity.this, locModelArrayList);
                                 listViewLoc.setAdapter(locAdapter);
                                 listViewLoc.setVisibility(View.VISIBLE);
                                 emptyText.setVisibility(View.GONE);
-                            }else {
+                            } else {
                                 listViewLoc.setVisibility(View.GONE);
                                 emptyText.setVisibility(View.VISIBLE);
                             }
 
-                        }else if (jsonObject.getString("status").equalsIgnoreCase("warning")){
-                            showRetry(tenantId,isAll,"Waring! Something went error, Please try again");
-                        }else {
-                            showRetry(tenantId,isAll,"ERROR! Something went error, Please try again");
+                        } else if (jsonObject.getString("status").equalsIgnoreCase("warning")) {
+                            showRetry(tenantId, isAll, "Waring! Something went error, Please try again");
+                        } else {
+                            showRetry(tenantId, isAll, "ERROR! Something went error, Please try again");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showRetry(tenantId,isAll,"Exception! Something went error, Please try again");
+                        showRetry(tenantId, isAll, "Exception! Something went error, Please try again");
                     }
                 }
             });
         });
     }
 
-    private void showRetry(String tenantId,boolean isAll, String msg) {
+    private void showRetry(String tenantId, boolean isAll, String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Note!");
         dialog.setMessage(msg);
@@ -158,7 +150,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                getLocationList(tenantId,isAll);
+                getLocationList(tenantId, isAll);
             }
 
         });
@@ -181,6 +173,7 @@ public class ListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

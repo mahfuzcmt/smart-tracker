@@ -1,5 +1,12 @@
 package com.bitsoft.smarttracking;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.LOGINSYNC;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.SMARTTRACE;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERID;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERTENANT;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,29 +43,23 @@ import java.util.concurrent.Executors;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static com.bitsoft.smarttracking.services.TracService.LOGINSYNC;
-import static com.bitsoft.smarttracking.services.TracService.SMARTTRACE;
-import static com.bitsoft.smarttracking.services.TracService.USERID;
-import static com.bitsoft.smarttracking.services.TracService.USERTENANT;
-
 public class SplashActivity extends AppCompatActivity {
     public static final int MY_PERMISSION_REQUEST_CODE = 7000;
     SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        sharedPreferences = getSharedPreferences(SMARTTRACE,Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SMARTTRACE, Context.MODE_PRIVATE);
         hideSystemUi();
 
     }
 
-    private void setUpDeviceID(){
-        if(NetworkConnection.isOnline(SplashActivity.this)){
+    private void setUpDeviceID() {
+        if (NetworkConnection.isOnline(SplashActivity.this)) {
             setUpDevieWithId(Build.ID);
-        }else{
+        } else {
             offlineAlert();
         }
     }
@@ -67,7 +68,7 @@ public class SplashActivity extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
-            String response=null;
+            String response = null;
             handler.post(() -> {
                 Log.d("TAGGGGGGG", "Operation Started");
             });
@@ -84,39 +85,40 @@ public class SplashActivity extends AppCompatActivity {
                 response = httpRequest.sendRequest(body, Constants.BASEURL + Constants.SETDEVICEBYID);
             } catch (Exception e) {
                 e.printStackTrace();
-                response=null;
+                response = null;
             }
             String res = response;
             handler.post(() -> {
                 if (res == null || res.isEmpty()) {
                     showRetry(deviceID);
                     return;
-                }else {
-                    Log.d("Resulttt ",res);
+                } else {
+                    Log.d("Resulttt ", res);
                     try {
-                        JSONObject jsonObject= new JSONObject(res);
-                        if (jsonObject.getString("status").equalsIgnoreCase("success")){
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                             JSONObject object = jsonObject.getJSONObject("userData");
-                            int userId = object.isNull("userId")?null:object.getInt("userId");
-                            int loginSync =object.isNull("syncLocInMin")?0:object.getInt("syncLocInMin");
-                            String DEVICEMAC = object.isNull("deviceMac")?null:object.getString("deviceMac");
-                            String ORGNAME = object.isNull("orgName")?null:object.getString("orgName");
-                            String TENANTID = object.isNull("tenantId")?null:object.getString("tenantId");
-                            Constants.USERID= userId;
-                            Constants.LOGINSYNC= loginSync;
-                            Constants.DEVICEMAC= DEVICEMAC;
-                            Constants.ORGNAME= ORGNAME;
-                            Constants.TENANTID= TENANTID;
+                            int userId = object.isNull("userId") ? null : object.getInt("userId");
+                            int loginSync = object.isNull("syncLocInMin") ? 0 : object.getInt("syncLocInMin");
+                            String DEVICEMAC = object.isNull("deviceMac") ? null : object.getString("deviceMac");
+                            String ORGNAME = object.isNull("orgName") ? null : object.getString("orgName");
+                            String TENANTID = object.isNull("tenantId") ? null : object.getString("tenantId");
+                            Constants.USERID = userId;
+                            Constants.LOGINSYNC = loginSync;
+                            Constants.LOGINSYNC = 10;
+                            Constants.DEVICEMAC = DEVICEMAC;
+                            Constants.ORGNAME = ORGNAME;
+                            Constants.TENANTID = TENANTID;
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt(USERID,Constants.USERID);
-                            editor.putString(USERTENANT,Constants.TENANTID);
-                            editor.putInt(LOGINSYNC,Constants.LOGINSYNC);
+                            editor.putInt(USERID, Constants.USERID);
+                            editor.putString(USERTENANT, Constants.TENANTID);
+                            editor.putInt(LOGINSYNC, Constants.LOGINSYNC);
                             editor.commit();
                             startActivity(new Intent(SplashActivity.this, DeviceInfoActivity.class));
                             finish();
-                        }else if (jsonObject.getString("status").equalsIgnoreCase("warning")){
+                        } else if (jsonObject.getString("status").equalsIgnoreCase("warning")) {
                             showRetry(deviceID);
-                        }else {
+                        } else {
                             showRetry(deviceID);
                         }
                     } catch (JSONException e) {
@@ -131,7 +133,7 @@ public class SplashActivity extends AppCompatActivity {
     private void showRetry(String deviceID) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Note!");
-        dialog.setMessage("You're not an authorized user with your device ID "+deviceID);
+        dialog.setMessage("You're not an authorized user with your device ID " + deviceID);
         dialog.setCancelable(false);
         dialog.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
             @Override
@@ -151,6 +153,7 @@ public class SplashActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
     private void hideSystemUi() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -163,12 +166,13 @@ public class SplashActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onBackPressed() {
         doCloseApp();
     }
 
-    public void offlineAlert(){
+    public void offlineAlert() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
         dialog.setTitle("No Internet Connection!");
         dialog.setMessage("Please turn on WiFi or Mobile Data.");
@@ -190,7 +194,7 @@ public class SplashActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void doCloseApp(){
+    public void doCloseApp() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
         dialog.setTitle("Alert!");
         dialog.setMessage("Are you want to close APP?");
@@ -211,7 +215,8 @@ public class SplashActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-    private void showAlert(String title,final String msg) {
+
+    private void showAlert(String title, final String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(title);
         dialog.setMessage(msg);
@@ -230,18 +235,20 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
-                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
     }
+
     private void openPermissionSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(("package:"+getPackageName())));
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(("package:" + getPackageName())));
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
     }
+
     private Boolean getPermission() {
         if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION)
@@ -252,24 +259,22 @@ public class SplashActivity extends AppCompatActivity {
                             ACCESS_COARSE_LOCATION}
                     , MY_PERMISSION_REQUEST_CODE);
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE:
-                for (int i=0;i<grantResults.length;i++){
-                    if(grantResults.length>0 && grantResults[i]== PackageManager.PERMISSION_DENIED)
-                    {
-                        showAlert("Permission Denied","Please goto settings and give permission");
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        showAlert("Permission Denied", "Please goto settings and give permission");
                         return;
-                    }else if(grantResults.length>0 && grantResults[i]== PackageManager.PERMISSION_GRANTED)
-                    {
+                    } else if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         setUpDeviceID();
                         return;
                     }
@@ -283,7 +288,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(getPermission()){
+        if (getPermission()) {
             setUpDeviceID();
         }
     }

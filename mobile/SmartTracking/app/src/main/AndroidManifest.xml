@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -18,15 +20,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartTracking"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
         <activity
             android:name=".ListActivity"
-            android:label="Last Location History"/>
+            android:label="Last Location History" />
         <activity
             android:name=".DeviceInfoActivity"
             android:theme="@style/Theme.SmartTracking.MAIN" />
         <activity
             android:name=".SplashActivity"
+            android:exported="true"
             android:theme="@style/Theme.SmartTracking.Loading">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,10 +43,20 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <service
-            android:name=".services.TracService"
-            android:enabled="true"
-            android:stopWithTask="false" />
+        <service android:name=".service_utils.MyForegroundService" />
+        <receiver
+            android:name=".service_utils.MyBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!--        <service-->
+        <!--            android:name=".services.TracService"-->
+        <!--            android:enabled="true"-->
+        <!--            android:stopWithTask="false" />-->
+
     </application>
 
 </manifest>

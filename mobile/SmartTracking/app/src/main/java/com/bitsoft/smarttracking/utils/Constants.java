@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class Constants {
-    public static int STARTTIME=60000;
+    public static int STARTTIME=1000;
     public static int USERID=0;
     public static int LOGINSYNC=0;
     public static String TENANTID=null;
