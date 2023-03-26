@@ -2,9 +2,6 @@ package com.bitsoft.smarttracking.service_utils;
 
 import static com.bitsoft.smarttracking.utils.Constants.STARTTIME;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +15,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.bitsoft.smarttracking.R;
 import com.bitsoft.smarttracking.utils.Constants;
 import com.bitsoft.smarttracking.utils.DeviceInfo;
 import com.bitsoft.smarttracking.utils.GPSTrack;
@@ -30,11 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -61,48 +52,7 @@ public class MyForegroundService extends ServiceMasterAnis {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        new Thread(
-//                () -> {
-//                    while (true) {
-//                        Log.e("ServiceAnis", "Service is running...");
-//                        try {
-//                            writeToSDFile();
-//                            final ToneGenerator[] toneGen1 = {new ToneGenerator(AudioManager.STREAM_MUSIC, 100)};
-//                            toneGen1[0].startTone(ToneGenerator.TONE_CDMA_PIP, 200);
-//                            Handler handler = new Handler(Looper.getMainLooper());
-//                            handler.postDelayed(() -> {
-//                                if (toneGen1[0] != null) {
-//                                    Log.d("ServiceAnis", "ToneGenerator released");
-//                                    toneGen1[0].release();
-//                                    toneGen1[0] = null;
-//                                }
-//                            }, 200);
-//                        } catch (Exception e) {
-//                            Log.d("ServiceAnis", "Exception while playing sound:" + e);
-//                        }
-//                        try {
-//                            Thread.sleep(2000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//        ).start();
-
-//        final String CHANNELID = "Foreground Service ID";
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = null;
-//            Notification.Builder notification = null;
-//
-//            channel = new NotificationChannel(CHANNELID, CHANNELID, NotificationManager.IMPORTANCE_LOW);
-//            getSystemService(NotificationManager.class).createNotificationChannel(channel);
-//            notification = new Notification.Builder(this, CHANNELID).setContentText("Smart Tracking").setContentTitle("Smart Tracking").setSmallIcon(R.drawable.ic_launcher_background);
-//            startForeground(1001, notification.build());
-//
-//        }
-
         startTimer();
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -133,13 +83,6 @@ public class MyForegroundService extends ServiceMasterAnis {
             }
         };
         timer.schedule(timerTask, Constants.LOGINSYNC * STARTTIME, Constants.LOGINSYNC * STARTTIME);
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//                                      @Override
-//                                      public void run() {
-//
-//                                      }
-//                                  },
-//                Constants.LOGINSYNC * STARTTIME, Constants.LOGINSYNC * STARTTIME);
     }
 
     public void informationSent(Context context) {
@@ -208,12 +151,6 @@ public class MyForegroundService extends ServiceMasterAnis {
                 obj.put("locations", locationList);
                 obj.put("deviceInfo", deviceInfo);
                 obj.put("tenantId", tenant);
-//                obj.put("userId", id);
-//                obj.put("charge", charge);
-//                obj.put("lat", lat);
-//                obj.put("lng", lng);
-//                obj.put("deviceInfo", deviceinfo);
-//                obj.put("tenantId", tenant);
                 RequestBody body = (RequestBody) RequestBody.create(mediaType, String.valueOf(obj));
                 HttpAsynRequest httpRequest = new HttpAsynRequest();
                 response = httpRequest.sendRequest(body, Constants.BASEURL + Constants.SAVEURL);
@@ -248,32 +185,6 @@ public class MyForegroundService extends ServiceMasterAnis {
                 }
             });
         });
-    }
-
-    private void writeToSDFile() {
-
-        // Find the root of the external storage.
-        // See http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
-
-        File root = android.os.Environment.getExternalStorageDirectory();
-        File dir = new File(root.getAbsolutePath());
-        dir.mkdirs();
-        File file = new File(dir, "test.txt");
-
-        try {
-            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm aa", Locale.getDefault()).format(new Date());
-            FileOutputStream f = new FileOutputStream(file);
-            PrintWriter pw = new PrintWriter(f);
-            pw.println(currentDate);
-            pw.flush();
-            pw.close();
-            f.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.i("ServiceAnis", "******* File not found. Did you" + " add a WRITE_EXTERNAL_STORAGE permission to the   manifest?");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Nullable
