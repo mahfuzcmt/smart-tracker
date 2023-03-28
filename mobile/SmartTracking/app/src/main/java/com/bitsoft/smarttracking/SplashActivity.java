@@ -3,7 +3,6 @@ package com.bitsoft.smarttracking;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.bitsoft.smarttracking.service_utils.MyForegroundService.LOGINSYNC;
-import static com.bitsoft.smarttracking.service_utils.MyForegroundService.SMARTTRACE;
 import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERID;
 import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERTENANT;
 
@@ -33,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import com.bitsoft.smarttracking.utils.Constants;
 import com.bitsoft.smarttracking.utils.HttpAsynRequest;
 import com.bitsoft.smarttracking.utils.NetworkConnection;
+import com.codestin.database_service.DatabaseMasterAnis;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +51,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        sharedPreferences = getSharedPreferences(SMARTTRACE, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(DatabaseMasterAnis.SMARTTRACK_DATA_CODE, Context.MODE_PRIVATE);
         hideSystemUi();
-
     }
 
     private void setUpDeviceID() {
@@ -112,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                             editor.putInt(USERID, Constants.USERID);
                             editor.putString(USERTENANT, Constants.TENANTID);
                             editor.putInt(LOGINSYNC, Constants.LOGINSYNC);
-                            editor.commit();
+                            editor.apply();
                             startActivity(new Intent(SplashActivity.this, DeviceInfoActivity.class));
                             finish();
                         } else if (jsonObject.getString("status").equalsIgnoreCase("warning")) {

@@ -21,11 +21,14 @@ import com.bitsoft.smarttracking.utils.GPSTrack;
 import com.bitsoft.smarttracking.utils.HttpAsynRequest;
 import com.bitsoft.smarttracking.utils.NetworkConnection;
 import com.codestin.background_service.ServiceMasterAnis;
+import com.codestin.database_service.DatabaseMasterAnis;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -42,7 +45,6 @@ public class MyForegroundService extends ServiceMasterAnis {
     private Timer timer;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private TimerTask timerTask;
-    public static final String SMARTTRACE = "smartracing";
     public static final String USERID = "userIdKey";
     public static final String USERTENANT = "userTenantKey";
     public static final String LOGINSYNC = "loginSyncKey";
@@ -50,8 +52,13 @@ public class MyForegroundService extends ServiceMasterAnis {
     public static final String USERLNG = "userLngKey";
     SharedPreferences sharedpreferences;
 
+    DatabaseMasterAnis databaseMaster;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        sharedpreferences = getSharedPreferences(DatabaseMasterAnis.SMARTTRACK_DATA_CODE, Context.MODE_PRIVATE);
+        databaseMaster = new DatabaseMasterAnis();
+        databaseMaster.initDatabase(sharedpreferences);
         startTimer();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -64,7 +71,6 @@ public class MyForegroundService extends ServiceMasterAnis {
     }
 
     public void startTimer() {
-        sharedpreferences = getSharedPreferences(SMARTTRACE, Context.MODE_PRIVATE);
         if (Constants.LOGINSYNC < 1) {
             Constants.LOGINSYNC = sharedpreferences.getInt(LOGINSYNC, 0);
         }
@@ -103,10 +109,10 @@ public class MyForegroundService extends ServiceMasterAnis {
         String device_manufacturer = Build.MANUFACTURER;
         int battery_life = DeviceInfo.getBatteryPercentage(context);
         JSONObject deviceInfo = new JSONObject();
-        JSONArray locationList = new JSONArray();
         JSONObject locationItem = new JSONObject();
-        try {
+        JSONArray locationList = new Gson().fromJson(databaseMaster.fetchData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(new JSONArray())), (Type) JSONArray.class);
 
+        try {
             int userid = sharedpreferences.getInt(USERID, 0);
             String tenantid = sharedpreferences.getString(USERTENANT, "n/a");
             String latitute = sharedpreferences.getString(USERLAT, "0.0");
@@ -126,6 +132,8 @@ public class MyForegroundService extends ServiceMasterAnis {
             locationItem.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm aa", Locale.getDefault()).format(new Date()));
 
             locationList.put(locationItem);
+
+            databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(locationList));
 
             saveDeviceInfo(userid, deviceInfo, locationList, tenantid, context);
 
@@ -168,6 +176,7 @@ public class MyForegroundService extends ServiceMasterAnis {
                         JSONObject jsonObject = new JSONObject(res);
                         String status = jsonObject.isNull("status") ? "null" : jsonObject.getString("status");
                         if (status.equals("success")) {
+                            databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(new JSONArray()));
                             int LOGINSYNC = jsonObject.isNull("syncLocInMin") ? Constants.LOGINSYNC : jsonObject.getInt("syncLocInMin");
                             if (LOGINSYNC != Constants.LOGINSYNC) {
                                 Constants.LOGINSYNC = LOGINSYNC;

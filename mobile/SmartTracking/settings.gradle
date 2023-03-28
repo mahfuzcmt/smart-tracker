@@ -2,7 +2,7 @@ rootProject.name = "Smart Tracking"
 
 //application settings
 def app_name = ['app']
-def libs_name = ['background-service']
+def libs_name = ['background-service', 'database-service']
 def libraryDir = '../../../apps-development/Consultant/'
 //include areas
 for (def iterator = 0; iterator < app_name.size(); iterator++) {

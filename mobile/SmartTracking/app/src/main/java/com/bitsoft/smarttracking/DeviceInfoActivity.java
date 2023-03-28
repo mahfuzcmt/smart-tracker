@@ -1,5 +1,12 @@
 package com.bitsoft.smarttracking;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERLAT;
+import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERLNG;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,14 +42,7 @@ import com.bitsoft.smarttracking.utils.DeviceInfo;
 import com.bitsoft.smarttracking.utils.GPSTrack;
 import com.bitsoft.smarttracking.utils.NetworkConnection;
 import com.bitsoft.smarttracking.utils.UtilMac;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.bitsoft.smarttracking.service_utils.MyForegroundService.SMARTTRACE;
-import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERLAT;
-import static com.bitsoft.smarttracking.service_utils.MyForegroundService.USERLNG;
+import com.codestin.database_service.DatabaseMasterAnis;
 
 public class DeviceInfoActivity extends AppCompatActivity {
     public static final int MY_PERMISSION_REQUEST_CODE = 7000;
@@ -56,7 +56,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_info);
-        sharedPreferences = getSharedPreferences(SMARTTRACE, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(DatabaseMasterAnis.SMARTTRACK_DATA_CODE, Context.MODE_PRIVATE);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         infoLayout = (LinearLayout) findViewById(R.id.device_info_layout);
         getDeviceInfo();
