@@ -22,13 +22,11 @@ import com.bitsoft.smarttracking.utils.HttpAsynRequest;
 import com.bitsoft.smarttracking.utils.NetworkConnection;
 import com.codestin.background_service.ServiceMasterAnis;
 import com.codestin.database_service.DatabaseMasterAnis;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -83,6 +81,11 @@ public class MyForegroundService extends ServiceMasterAnis {
                         Log.d("ServiceAnis", "Service is Running");
                         if (NetworkConnection.isOnline(getApplicationContext())) {
                             informationSent(getApplicationContext());
+                        } else {
+                            fetchLocationData(getApplicationContext());
+                            saveLocalStorage(getApplicationContext(),
+                                    sharedpreferences.getString(USERLAT, "0.0"),
+                                    sharedpreferences.getString(USERLNG, "0.0"));
                         }
                     }
                 });
@@ -91,15 +94,41 @@ public class MyForegroundService extends ServiceMasterAnis {
         timer.schedule(timerTask, Constants.LOGINSYNC * STARTTIME, Constants.LOGINSYNC * STARTTIME);
     }
 
-    public void informationSent(Context context) {
+    public JSONArray saveLocalStorage(Context context, String latitute, String longitute) {
+        JSONObject locationItem = new JSONObject();
+        JSONArray locationList = new JSONArray();
+
+        int battery_life = DeviceInfo.getBatteryPercentage(context);
+
+        try {
+            locationItem.put("charge", battery_life + "%");
+            locationItem.put("lat", String.format("%.8f", Double.valueOf(latitute)));
+            locationItem.put("lng", String.format("%.8f", Double.valueOf(longitute)));
+            locationItem.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm aa", Locale.getDefault()).format(new Date()));
+            locationList = new JSONArray(databaseMaster.fetchData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new JSONArray().toString()));
+            locationList.put(locationItem);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, locationList.toString());
+        return locationList;
+    }
+
+    public void fetchLocationData(Context context) {
         GPSTrack gpsTrack = new GPSTrack(context);
         if (gpsTrack.getLocation() != null) {
             Location mLastLocation = gpsTrack.getLocation();
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putLong("LAT", (long) mLastLocation.getLatitude());
             editor.putLong("LNG", (long) mLastLocation.getLongitude());
-            editor.commit();
+            editor.apply();
         }
+    }
+
+    public void informationSent(Context context) {
+
+        fetchLocationData(context);
+
         String mac_address = DeviceInfo.getMACAddress("wlan0");
         String android_id = DeviceInfo.getAndroidID(context);
         String os_version = System.getProperty("os.version"); // OS version
@@ -107,12 +136,11 @@ public class MyForegroundService extends ServiceMasterAnis {
         String brand = Build.BRAND;          // Device
         String device_name = Build.MODEL;            // Model
         String device_manufacturer = Build.MANUFACTURER;
-        int battery_life = DeviceInfo.getBatteryPercentage(context);
         JSONObject deviceInfo = new JSONObject();
-        JSONObject locationItem = new JSONObject();
-        JSONArray locationList = new Gson().fromJson(databaseMaster.fetchData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(new JSONArray())), (Type) JSONArray.class);
+        JSONArray locationList = new JSONArray();
 
         try {
+
             int userid = sharedpreferences.getInt(USERID, 0);
             String tenantid = sharedpreferences.getString(USERTENANT, "n/a");
             String latitute = sharedpreferences.getString(USERLAT, "0.0");
@@ -126,20 +154,14 @@ public class MyForegroundService extends ServiceMasterAnis {
             deviceInfo.put("device_name", device_name);
             deviceInfo.put("device_manufacturer", device_manufacturer);
 
-            locationItem.put("charge", battery_life + "%");
-            locationItem.put("lat", String.format("%.8f", Double.valueOf(latitute)));
-            locationItem.put("lng", String.format("%.8f", Double.valueOf(longitute)));
-            locationItem.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm aa", Locale.getDefault()).format(new Date()));
-
-            locationList.put(locationItem);
-
-            databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(locationList));
+            locationList = saveLocalStorage(context, latitute, longitute);
 
             saveDeviceInfo(userid, deviceInfo, locationList, tenantid, context);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     public void saveDeviceInfo(final int id, final JSONObject deviceInfo, final JSONArray locationList, final String tenant, final Context context) {
@@ -176,7 +198,7 @@ public class MyForegroundService extends ServiceMasterAnis {
                         JSONObject jsonObject = new JSONObject(res);
                         String status = jsonObject.isNull("status") ? "null" : jsonObject.getString("status");
                         if (status.equals("success")) {
-                            databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new Gson().toJson(new JSONArray()));
+                            databaseMaster.saveData(DatabaseMasterAnis.SAVE_GEO_DATA_CODE, new JSONArray().toString());
                             int LOGINSYNC = jsonObject.isNull("syncLocInMin") ? Constants.LOGINSYNC : jsonObject.getInt("syncLocInMin");
                             if (LOGINSYNC != Constants.LOGINSYNC) {
                                 Constants.LOGINSYNC = LOGINSYNC;
