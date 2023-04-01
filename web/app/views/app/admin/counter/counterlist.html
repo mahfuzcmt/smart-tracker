@@ -1,0 +1,81 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Counter List <small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li class="active">Counter List</li>
+	</ol>
+</section>
+<section class="content">
+	<button type="submit" class="btn btn-primary" data-ng-click="add()"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="show-hide-animation" >
+						<div class="col-md-6 pull-left">
+							<h5 data-ng-show="counterList.length > 0">{{ pageItemText }}</h5>
+							<h5 data-ng-show="counterList.length == 0">No Counter is found</h5>
+						</div>
+						<div class="col-md-6 pull-right  text-right top-paginationBox">
+							<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+										data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+						</div>
+					</div>
+				</div>
+
+				<div class="box-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+						<tr>
+							<th class="text-right">#</th>
+							<th class="text-left">Name</th>
+							<th class="text-left">Address</th>
+							<th class="text-right">Total Routes</th>
+							<th class="text-left">Status</th>
+							<th class="text-left">Action</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr data-ng-repeat="counter in counterList ">
+							<td class="text-right">{{$index+1}}</td>
+							<td class="text-left">{{counter.name}}</td>
+							<td class="text-left">{{counter.address}}</td>
+							<td class="text-right">{{counter.numberOfRoutes}}</td>
+							<td ng-class="{'Active' :'text-left text-success', 'Inactive':'text-left text-danger'}[counter.status]">{{counter.status}}</td>
+							<td class="text-left">
+									<span>
+										<button type="submit" class="btn btn-success" data-ng-click="editObj(counter.id)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+									</span>
+								<span>
+										<button type="submit" class="btn btn-danger" data-ng-click="deleteObj(counter.id)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+								</span>
+								<span>
+										<button type="submit" class="btn btn-info" data-ng-click="showReport(counter.id)"> <i class="ion ion-stats-bars" aria-hidden="true"></i> Report</button>
+								</span>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="show-hide-animation" >
+			<div class="col-md-6 pull-left">
+				<h5 data-ng-show="counterList.length > 0">{{ pageItemText }}</h5>
+				<h5 data-ng-show="counterList.length == 0">No Counter is found</h5>
+			</div>
+			<div class="col-md-6 pull-right  text-right top-paginationBox">
+				<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+							data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+

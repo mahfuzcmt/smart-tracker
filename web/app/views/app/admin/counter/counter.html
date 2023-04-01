@@ -1,0 +1,79 @@
+<section class="content-header">
+    <h1>
+        Counter
+        <small></small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Settings</li>
+        <li><a href="#/users"> Counter Management</a></li>
+        <li class="active">{{btnName}}</li>
+    </ol>
+</section>
+<section class="content">
+    <button type="submit" class="btn btn-primary" data-ng-click="backToPrevious()"><i class="fa fa-reply"
+                                                                                      aria-hidden="true"></i> Back
+    </button>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Counter Management</h3>
+                </div>
+                <div class="box-body">
+                    <form>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Counter Name<span class="mandatory">*</span></label>
+                                <input type="text" class="form-control" placeholder="Enter a Name"
+                                       data-ng-model="obj.name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" class="form-control" placeholder="Enter address"
+                                       data-ng-model="obj.address"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Trip Type<span class="mandatory">*</span></label>
+                                <select data-ng-model="obj.tripType" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a status" required>
+                                    <option></option>
+                                    <option ng-selected="{{tripType.id === obj.tripType}}"
+                                            data-ng-repeat="tripType in tripTypeList"
+                                            value="{{tripType.value}}">
+                                        {{tripType.key}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status<span class="mandatory">*</span></label>
+                                <select data-ng-model="obj.status" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a status" required>
+                                    <option></option>
+                                    <option ng-selected="{{status.id === obj.status}}"
+                                            data-ng-repeat="status in statusList | orderBy:'name'"
+                                            value="{{status.value}}">
+                                        {{status.key}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" data-ng-click="saveOrUpdate(obj)">
+                                {{btnName}}
+                            </button>
+                            <button class="btn btn-default" data-ng-click="backToPrevious()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

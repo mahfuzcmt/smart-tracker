@@ -1,0 +1,130 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Sales Report <small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li class="active">Sales Report</li>
+	</ol>
+</section>
+<section>
+	<div class="col-md-12">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>From Date</span></label>
+				<div class="input-group">
+					<input id="fromDate" type="text" class="form-control" placeholder="Pick from date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.fromDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>To Date</label>
+				<div class="input-group">
+					<input id="toDate" type="text" class="form-control" placeholder="Pick to date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.toDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Counter</label>
+				<select data-ng-change="getRouteByCounterId(obj.counterId)" data-ng-model="obj.counterId" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a Counter" required>
+					<option></option>
+					<option data-ng-repeat="counter in counterList | orderBy:'name'" value="{{counter.id}}">{{counter.name}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Route</label>
+				<select data-ng-model="obj.routeId" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a route" required>
+					<option></option>
+					<option data-ng-repeat="route in routeList | orderBy:'name'" value="{{route.id}}">{{route.name}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-4" style="margin-top: 23px;">
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary" data-ng-click="getData(obj)">Get Data</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="content">
+	<div>
+		<div>
+			<label>Total Sales: </label> <span class="amount info">{{totalSales | currency : "BDT " : 2}}</span>
+			<label>Total Reversed: </label> <span class="amount red">{{totalRefund | currency : "BDT " : 2}}</span>
+			<label>Total Net Sales: </label> <span class="amount green">{{netSale - totalRefund | currency : "BDT " : 2}}</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="show-hide-animation" >
+						<div class="col-md-6 pull-left">
+							<h5 data-ng-show="dataList.length > 0">{{ pageItemText }}</h5>
+							<h5 data-ng-show="dataList.length == 0">No history found</h5>
+						</div>
+						<div class="col-md-6 pull-right  text-right top-paginationBox">
+							<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+										data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+						</div>
+					</div>
+				</div>
+
+				<div class="box-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+						<tr>
+							<th class="text-right">#</th>
+							<th class="text-left">Date</th>
+							<th class="text-left">User</th>
+							<th class="text-left">Counter</th>
+							<th class="text-left">Route</th>
+							<th class="text-left">Shift</th>
+							<th class="text-right">Net Sale</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr data-ng-repeat="data in dataList ">
+							<td class="text-right">{{$index+pageDataBegin}}</td>
+							<td class="text-left">{{data.created | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+							<td class="text-left">{{data.userName}}</td>
+							<td class="text-left">{{data.counterName}}</td>
+							<td class="text-left">{{data.routeName}}</td>
+							<td class="text-left">{{data.shift}}</td>
+							<td class="text-right">{{data.netSale | currency : "BDT " : 2}}</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="show-hide-animation" >
+			<div class="col-md-6 pull-left">
+				<h5 data-ng-show="dataList.length > 0">{{ pageItemText }}</h5>
+				<h5 data-ng-show="dataList.length == 0">No history found</h5>
+			</div>
+			<div class="col-md-6 pull-right  text-right top-paginationBox">
+				<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+							data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+

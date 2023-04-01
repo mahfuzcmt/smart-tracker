@@ -62,24 +62,24 @@ http://localhost:8080/location/save?tenantId=TENANT_ID
   },
   "tenantId": "tenant-1"
 }
-
 Response:
 
 {
-  "status": "success",
-  "locationLog": {
-    "id": 20,
-    "created": "2021-11-08T11:02:33Z",
-    "lat": 23.544987,
-    "address": "20, Jhenaidah, Bangladesh",
-    "updated": "2021-11-08T11:02:33Z",
-    "deviceInfo": "{}",
-    "user": {
-      "id": 4
-    },
-    "charge": "50%",
-    "identifier": null,
-    "lng": 89.1726
-  },
-  "syncLocInMin": 5
+"status": "success",
+"locationLog": {
+"id": 20,
+"created": "2021-11-08T11:02:33Z",
+"lat": 23.544987,
+"address": "20, Jhenaidah, Bangladesh",
+"updated": "2021-11-08T11:02:33Z",
+"deviceInfo": "{}",
+"user": {
+"id": 4
+},
+"charge": "50%",
+"identifier": null,
+"lng": 89.1726
+},
+"syncLocInMin": 5
 }
+

@@ -1,0 +1,45 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Collection Report <small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li class="active">Collection Report</li>
+	</ol>
+</section>
+<section>
+	<div class="col-md-12">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>From Date</span></label>
+				<div class="input-group">
+					<input id="fromDate" type="text" class="form-control" placeholder="Pick from date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.fromDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>To Date</label>
+				<div class="input-group">
+					<input id="toDate" type="text" class="form-control" placeholder="Pick to date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.toDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4" style="margin-top: 23px;">
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary" data-ng-click="exportData(obj)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Export Report</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+

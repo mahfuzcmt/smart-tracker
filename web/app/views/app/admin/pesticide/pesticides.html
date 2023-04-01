@@ -1,0 +1,151 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		কীটনাশক ডিলার <small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li class="active">কীটনাশক ডিলার</li>
+	</ol>
+</section>
+<section class="content">
+	<button type="submit" class="btn btn-primary" data-ng-click="add()"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+</section>
+<section>
+	<div class="col-md-12">
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Status</label>
+				<select data-ng-model="obj.status" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a status" required>
+					<option></option>
+					<option ng-selected="{{status.id === obj.status}}"
+							data-ng-repeat="status in statusList | orderBy:'name'" value="{{status.value}}">{{status.key}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>License Type</label>
+				<select data-ng-model="obj.licenseType" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a license type" required>
+					<option></option>
+					<option
+							data-ng-repeat="licenseType in licenseTypeList | orderBy:'name'" value="{{licenseType.value}}">{{licenseType.key}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Union</label>
+				<select data-ng-change="loadBlocksByUnion(obj)" data-ng-model="obj.unionId" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a union" required>
+					<option></option>
+					<option
+							data-ng-repeat="union in unions | orderBy:'nameBng'" value="{{union.id}}">{{union.nameBng}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Block</label>
+				<select data-ng-model="obj.block" ui-select2
+						class="form-control" style="padding: 0px;"
+						data-placeholder="Select a block" required>
+					<option></option>
+					<option data-ng-repeat="block in blockList | orderBy:'name'" value="{{block.id}}">
+						{{block.nameBng}}
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Search by Text</label>
+				<input type="text" class="form-control" data-ng-model="obj.searchText" />
+			</div>
+		</div>
+		<div class="col-md-2" style="margin-top: 23px;">
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary" data-ng-click="loadDataList(obj)">Show Data</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="content">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+					<div class="show-hide-animation" >
+						<div class="col-md-6 pull-left">
+							<h5 data-ng-show="userList.length > 0">{{ pageItemText }}</h5>
+							<h5 data-ng-show="userList.length == 0">No User is found</h5>
+						</div>
+						<div class="col-md-6 pull-right  text-right top-paginationBox">
+							<pagination data-ng-model="currentPage" data-total-items="userList"
+							data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+						</div>
+					</div>
+				</div>
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                    	<thead>
+	                        <tr>
+	                            <th class="text-right">#</th>
+								<th class="text-left">Full Name</th>
+	                            <th class="text-left">Business Name</th>
+	                            <th class="text-left">Business Address</th>
+	                            <th class="text-left">Union</th>
+	                            <th class="text-left">Block</th>
+	                            <th class="text-left">License Type</th>
+	                            <th class="text-left">License#</th>
+	                            <th class="text-left">Contact#</th>
+	                            <th class="text-center">Expire Date</th>
+	                            <th class="text-left">Status</th>
+	                            <th class="text-left">Action</th>
+	                         </tr>
+                    	</thead>
+                        <tbody>
+	                        <tr data-ng-repeat="user in userList ">
+								<td class="text-right">{{$index+1}}</td>
+								<td class="text-left">{{user.name}}</td>
+								<td class="text-left">{{user.businessName}}</td>
+								<td class="text-left">{{user.businessAddress}}</td>
+								<td class="text-left">{{user.unionPorishodEng}}</td>
+								<td class="text-left">{{user.blockEng}}</td>
+								<td class="text-left">{{user.licenseType}}</td>
+								<td class="text-left">{{user.licenseNo}}</td>
+								<td class="text-left">{{user.contactNo}}</td>
+								<td class="text-center">{{user.expireDate | date : "dd-MMM-yyyy"}}</td>
+								<td ng-class="{'Active' :'text-left text-success', 'Inactive':'text-left text-warning', 'Expired':'text-left text-danger'}[user.status]">{{user.status}}</td>
+								<td class="text-left">
+									<span>
+										<button type="submit" class="btn btn-success" data-ng-click="editObj(user.id)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+									</span>
+								</td>
+							</tr>
+	                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+		<div class="show-hide-animation" >
+			<div class="col-md-6 pull-left">
+				<h5 data-ng-show="userList.length > 0">{{ pageItemText }}</h5>
+				<h5 data-ng-show="userList.length == 0">No data is found</h5>
+			</div>
+			<div class="col-md-6 pull-right  text-right top-paginationBox">
+				<pagination data-ng-model="currentPage" data-total-items="userList"
+				data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+			</div>
+		</div>
+    </div>
+</section>
+
+
+

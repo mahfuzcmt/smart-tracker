@@ -1,0 +1,121 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Transaction History List <small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li class="active">Transaction History List</li>
+	</ol>
+</section>
+<section class="content">
+	<button type="submit" class="btn btn-primary" data-ng-click="backToPrevious()"><i class="fa fa-reply" aria-hidden="true"></i> Back</button>
+</section>
+<section>
+	<div class="col-md-12">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label>From Date</span></label>
+				<div class="input-group">
+					<input id="fromDate" type="text" class="form-control" placeholder="Pick from date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.fromDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group">
+				<label>To Date</label>
+				<div class="input-group">
+					<input id="toDate" type="text" class="form-control" placeholder="Pick to date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.toDate" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+					<div class="input-group-addon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group">
+				<label>Tnx Type</label>
+				<select data-ng-model="obj.type" ui-select2 class="form-control" style="padding: 0px;"
+						data-placeholder="Select a type" required>
+					<option value="add">Add</option>
+					<option value="deduct">Deduct</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-3" style="margin-top: 23px;">
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary" data-ng-click="getData(obj)">Show</button>
+				<button type="submit" class="btn btn-primary" data-ng-click="exportData(obj)">Export</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="content">
+	<div>
+		<div>
+			<label>Total Add: </label> <span class="amount green">{{totalAdd | currency : "BDT " : 2}}</span>
+			<label>Total Deduct: </label> <span class="amount red">{{totalDeduct | currency : "BDT " : 2}}</span>
+		</div>
+	</div>
+	<div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+					<div class="show-hide-animation" >
+						<div class="col-md-6 pull-left">
+							<h5 data-ng-show="userList.length > 0">{{ pageItemText }}</h5>
+							<h5 data-ng-show="userList.length == 0">No history found</h5>
+						</div>
+						<div class="col-md-6 pull-right  text-right top-paginationBox">
+							<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+							data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+						</div>
+					</div>
+				</div>
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                    	<thead>
+	                        <tr>
+	                            <th class="text-right">#</th>
+								<th class="text-left">Date</th>
+								<th class="text-left">Note</th>
+	                            <th class="text-right">Amount</th>
+	                            <th class="text-left">Type</th>
+	                            <th class="text-left">Transaction By</th>
+	                            <th class="text-left">Status</th>
+	                         </tr>
+                    	</thead>
+                        <tbody>
+	                        <tr data-ng-repeat="data in userList ">
+								<td class="text-right">{{$index+1}}</td>
+								<td class="text-left">{{data.created | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+								<td class="text-left">{{data.note}}</td>
+								<td class="text-right">{{data.amount | currency : "BDT " : 2}}</td>
+								<td class="text-left">{{data.type | uppercase}}</td>
+								<td class="text-left">{{data.transactionBy}}</td>
+								<td ng-class="{'success' :'text-left text-success', 'failed':'text-left text-danger'}[data.status]">{{data.status}}</td>
+							</tr>
+	                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+		<div class="show-hide-animation" >
+			<div class="col-md-6 pull-left">
+				<h5 data-ng-show="userList.length > 0">{{ pageItemText }}</h5>
+				<h5 data-ng-show="userList.length == 0">No history found</h5>
+			</div>
+			<div class="col-md-6 pull-right  text-right top-paginationBox">
+				<pagination data-ng-model="currentPage" data-total-items="dataListSize"
+				data-boundary-links="true" data-max-size="maxPaginationSize" data-items-per-page="itemsPerPage"></pagination>
+			</div>
+		</div>
+    </div>
+</section>
+
+
+

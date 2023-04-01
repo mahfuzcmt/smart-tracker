@@ -1,0 +1,95 @@
+<section class="content-header">
+    <h1>
+        Manual Sales
+        <small></small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Settings</li>
+        <li><a> Manual Sales</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Manual Sales</h3>
+                </div>
+                <div class="box-body">
+                    <form>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Counter</label>
+                                <select data-ng-change="getRouteByCounterId(obj.counterId)" data-ng-model="obj.counterId" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a Counter" required>
+                                    <option></option>
+                                    <option data-ng-repeat="counter in counterList | orderBy:'name'" value="{{counter.id}}">{{counter.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Route</label>
+                                <select data-ng-model="obj.routeId" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a route" required>
+                                    <option></option>
+                                    <option data-ng-repeat="route in routeList | orderBy:'name'" value="{{route.id}}">{{route.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>User</label>
+                                <select data-ng-model="obj.userId" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a route" required>
+                                    <option></option>
+                                    <option data-ng-repeat="user in userList | orderBy:'name'" value="{{user.id}}">{{user.fullName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Shift</label>
+                                <select data-ng-model="obj.shift" ui-select2 class="form-control" style="padding: 0px;"
+                                        data-placeholder="Select a shift" required>
+                                    <option></option>
+                                    <option value="Morning">Morning
+                                    <option value="Evening">Evening
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sales Date</label>
+                                <div class="input-group">
+                                    <input id="toDate" type="text" class="form-control" placeholder="Pick to date" onclick="this.setSelectionRange(0, this.value.length)" data-ng-model="obj.dateTime" bootstrap-datepicker data-date-format="yyyy-mm-dd" />
+                                    <div class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Sales Tickets :</label>
+                                <input type="number" class="form-control" placeholder="Enter number of ticket. Exm: 1" data-ng-model="obj.quantity" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" data-ng-click="addSales(obj)">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

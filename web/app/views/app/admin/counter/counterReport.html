@@ -1,0 +1,62 @@
+<section class="content-header">
+	<h1>
+		Report <small>of {{counterName}} </small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Counters</a></li>
+		<li class="active">Report</li>
+	</ol>
+</section>
+
+<section class="content">
+	<div class="row col-md-12">
+		<div class="box-body">
+			<div class="col-md-4">
+				<div class="small-box bg-green">
+					<div class="inner">
+						<h3>{{data.totalSuccess | currency : "BDT " : 2}}</h3>
+						<p>Today Total Sales</p>
+					</div>
+					<div class="icon">
+						<i class="ion ion-stats-bars"></i>
+					</div>
+					<a class="small-box-footer link"></a>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="small-box bg-red">
+					<div class="inner">
+						<h3>{{data.totalReversed | currency : "BDT " : 2}}</h3>
+						<p>Today Total Refund</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-times-circle-o"></i>
+					</div>
+					<a class="small-box-footer link"></a>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="small-box bg-aqua">
+					<div class="inner">
+						<h3>{{data.totalTickets}}</h3>
+						<p>Today Total Ticket Sales</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-ticket"></i>
+					</div>
+					<a class="small-box-footer link"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</section>
+
+
+
+
+
+
+
+
